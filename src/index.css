@@ -1,0 +1,31 @@
+@import "tailwindcss";
+@import "@flaticon/flaticon-uicons/css/all/all.css";
+
+@theme {
+  --color-primaryForest: #244b3a;
+  --color-backgroundIvory: #f5f3e9;
+  --color-secondarySage: #a9bea4;
+  --color-accentSend: #dca878;
+  --color-textMoss: #252c28;
+}
+
+@font-face {
+  font-family: "Switzer";
+  src: url("./assets/fonts/Switzer-Font.ttf") format("truetype");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("./assets/fonts/Satoshi-Font.ttf") format("truetype");
+  font-weight: 200 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-switzer: "Switzer", sans-serif;
+  --font-satoshi: "Satoshi", sans-serif;
+}
