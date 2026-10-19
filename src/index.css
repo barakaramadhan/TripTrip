@@ -7,7 +7,10 @@
   --color-secondarySage: #a9bea4;
   --color-accentSend: #dca878;
   --color-textMoss: #252c28;
-
+  --color-whitebright: #fefefe;
+  --color-blackdark: #000000;
+  --color-textLabel: #969696;
+  --color-textDesc: #EEEEEE;
 }
 
 @font-face {
