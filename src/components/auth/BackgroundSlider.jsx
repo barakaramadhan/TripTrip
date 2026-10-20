@@ -1,11 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { BACKGROUNDS, SLIDE_DURATION_MS } from "../../constants/backgrounds";
 
+// Foto latar. Foto ke-`index` tampil, foto sebelumnya memudar (crossfade).
+// Index-nya diatur oleh HeroPanel.
 export default function BackgroundSlider({ index }) {
   const background = BACKGROUNDS[index];
 
   return (
     <div className="absolute inset-0 bg-textMoss overflow-hidden">
+      {/* Fade-in + zoom-out pelan (efek "Ken Burns") */}
       <AnimatePresence>
         <motion.div
           key={background.id}
