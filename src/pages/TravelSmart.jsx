@@ -1,13 +1,15 @@
 import React from "react";
 import Card from "../components/ui/Card";
 import ImageTravel1 from "../assets/images/SmartRoute.png";
+import ImageTravel2 from "../assets/images/BudgetEstimation.png";
+import ImageTravel3 from "../assets/images/Daily.png";
 
 function TravelSmart() {
   return (
     <>
-      <section className="bg-backgroundIvory px-20 py-36">
-        <div className="">
-          <h1 className="font-switzer font-bold text-4xl text-black">
+      <section className="bg-backgroundIvory px-20 pt-44 pb-96">
+        <div>
+          <h1 className="font-switzer font-bold text-5xl text-black">
             Travel Smarter
           </h1>
           <p className="font-satoshi font-normal text-xl text-blackdark w-[500px]">
@@ -19,9 +21,15 @@ function TravelSmart() {
           <Card className="col-span-1 row-span-2 min-h-96 w-full bg-whitebright px-4 py-5">
             <img src={ImageTravel1} alt="" />
             <div className="relative z-10 p-5">
-              <p className="font-satoshi font-bold text-lg text-textLabel">01</p>
-              <h2 className="font-satoshi font-bold text-3xl text-blackdark">Smart Route</h2>
-              <p className="font-satoshi font-medium text-base text-textLabel">Optimized routes between stops.</p>
+              <p className="font-satoshi font-bold text-lg text-textLabel">
+                01
+              </p>
+              <h2 className="font-satoshi font-bold text-3xl text-blackdark">
+                Smart Route
+              </h2>
+              <p className="font-satoshi font-medium text-base text-textLabel">
+                Optimized routes between stops.
+              </p>
               <div className="pt-6 pb-5">
                 <p className="flex items-center gap-3 font-satoshi font-medium text-lg text-textMoss">
                   <svg
@@ -45,7 +53,7 @@ function TravelSmart() {
                   >
                     <circle cx="14" cy="14" r="14" fill="#252B27" />
                   </svg>
-                Estimated travel time
+                  Estimated travel time
                 </p>
                 <p className="flex items-center gap-3 font-satoshi font-medium text-lg text-textMoss">
                   <svg
@@ -57,19 +65,27 @@ function TravelSmart() {
                   >
                     <circle cx="14" cy="14" r="14" fill="#252B27" />
                   </svg>
-                 Transportation options
+                  Transportation options
                 </p>
               </div>
               <div className="w-full border-t-2 border-dashed border-black"></div>
-              <p className="font-satoshi font-medium text-lg text-textMoss pt-5">Save up to XX% on travel time</p>
+              <p className="font-satoshi font-medium text-lg text-textMoss pt-5">
+                Save up to XX% on travel time
+              </p>
             </div>
           </Card>
           <Card className="col-span-1 row-span-2 min-h-96 w-full bg-whitebright px-4 py-5">
-            <img src={ImageTravel1} alt="" />
+            <img src={ImageTravel2} alt="" />
             <div className="relative z-10 p-5">
-              <p className="font-satoshi font-bold text-lg text-textLabel">01</p>
-              <h2 className="font-satoshi font-bold text-3xl text-blackdark">Smart Route</h2>
-              <p className="font-satoshi font-medium text-base text-textLabel">Optimized routes between stops.</p>
+              <p className="font-satoshi font-bold text-lg text-textLabel">
+                02
+              </p>
+              <h2 className="font-satoshi font-bold text-3xl text-blackdark">
+                Budget Estimation
+              </h2>
+              <p className="font-satoshi font-medium text-base text-textLabel">
+                Know what your trip might cost.
+              </p>
               <div className="pt-6 pb-5">
                 <p className="flex items-center gap-3 font-satoshi font-medium text-lg text-textMoss">
                   <svg
@@ -81,7 +97,7 @@ function TravelSmart() {
                   >
                     <circle cx="14" cy="14" r="14" fill="#252B27" />
                   </svg>
-                  Optimized visit order
+                  Estimate your travel expenses
                 </p>
                 <p className="flex items-center gap-3 font-satoshi font-medium text-lg text-textMoss">
                   <svg
@@ -93,7 +109,7 @@ function TravelSmart() {
                   >
                     <circle cx="14" cy="14" r="14" fill="#252B27" />
                   </svg>
-                Estimated travel time
+                  Include stays and activities
                 </p>
                 <p className="flex items-center gap-3 font-satoshi font-medium text-lg text-textMoss">
                   <svg
@@ -105,19 +121,27 @@ function TravelSmart() {
                   >
                     <circle cx="14" cy="14" r="14" fill="#252B27" />
                   </svg>
-                 Transportation options
+                  Adjust plans to your budget
                 </p>
               </div>
               <div className="w-full border-t-2 border-dashed border-black"></div>
-              <p className="font-satoshi font-medium text-lg text-textMoss pt-5">Save up to XX% on travel time</p>
+              <p className="font-satoshi font-medium text-lg text-textMoss pt-5">
+                A clearer picture of your travel costs.
+              </p>
             </div>
           </Card>
           <Card className="col-span-1 row-span-2 min-h-96 w-full bg-whitebright px-4 py-5">
-            <img src={ImageTravel1} alt="" />
+            <img src={ImageTravel3} alt="" />
             <div className="relative z-10 p-5">
-              <p className="font-satoshi font-bold text-lg text-textLabel">01</p>
-              <h2 className="font-satoshi font-bold text-3xl text-blackdark">Smart Route</h2>
-              <p className="font-satoshi font-medium text-base text-textLabel">Optimized routes between stops.</p>
+              <p className="font-satoshi font-bold text-lg text-textLabel">
+                03
+              </p>
+              <h2 className="font-satoshi font-bold text-3xl text-blackdark">
+                Daily Itinerary
+              </h2>
+              <p className="font-satoshi font-medium text-base text-textLabel">
+                Turn your ideas into a daily plan.
+              </p>
               <div className="pt-6 pb-5">
                 <p className="flex items-center gap-3 font-satoshi font-medium text-lg text-textMoss">
                   <svg
@@ -129,7 +153,7 @@ function TravelSmart() {
                   >
                     <circle cx="14" cy="14" r="14" fill="#252B27" />
                   </svg>
-                  Optimized visit order
+                  Arrange activities by day
                 </p>
                 <p className="flex items-center gap-3 font-satoshi font-medium text-lg text-textMoss">
                   <svg
@@ -141,7 +165,7 @@ function TravelSmart() {
                   >
                     <circle cx="14" cy="14" r="14" fill="#252B27" />
                   </svg>
-                Estimated travel time
+                  Set times for each activity
                 </p>
                 <p className="flex items-center gap-3 font-satoshi font-medium text-lg text-textMoss">
                   <svg
@@ -153,11 +177,13 @@ function TravelSmart() {
                   >
                     <circle cx="14" cy="14" r="14" fill="#252B27" />
                   </svg>
-                 Transportation options
+                  Edit and save your itinerary
                 </p>
               </div>
               <div className="w-full border-t-2 border-dashed border-blackdark"></div>
-              <p className="font-satoshi font-medium text-lg text-textMoss pt-5">Save up to XX% on travel time</p>
+              <p className="font-satoshi font-medium text-lg text-textMoss pt-5">
+                Your whole adventure, in one plan.
+              </p>
             </div>
           </Card>
         </div>

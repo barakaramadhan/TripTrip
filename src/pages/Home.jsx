@@ -15,12 +15,12 @@ function Home() {
           TripTrip!!, Let's
         </h1>
 
-        <div className="relative -mt-16 z-10">
-          <h2 className="absolute -top-5 left-2.5 text-[220px] tracking-wide text-secondarySage/40 inset-0 font-bold [-webkit-text-stroke:1px_var(--color-textMoss)]">
-            ADVENTURE
+        <div className="relative -mt-14 z-10">
+          <h2 className="absolute -top-5 left-2.5 text-[208px] whitespace-nowrap text-secondarySage/40 font-bold [-webkit-text-stroke:1.5px_var(--color-textMoss)]">
+            ADVENTURE <span className="font-switzer">.</span>
           </h2>
-          <h2 className="relative text-[220px] text-textMoss font-bold font-switzer tracking-wide">
-            ADVENTURE
+          <h2 className="relative text-[208px] text-textMoss font-bold font-switzer tracking-wide">
+            ADVENTURE.
           </h2>
         </div>
       </div>

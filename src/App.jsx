@@ -5,6 +5,7 @@ import Destinations from './pages/Destinations'
 import SmoothScroll from './components/shared/SmoothScroll'
 import AiPlanned from './pages/AiPlanned'
 import TravelSmart from './pages/TravelSmart'
+import ReadyForAdventure from './pages/ReadyForAdventure'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <SmoothScroll />
       <AiPlanned />
       <TravelSmart />
+      <ReadyForAdventure />
     </>
   )
 }
