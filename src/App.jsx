@@ -6,6 +6,7 @@ import SmoothScroll from './components/shared/SmoothScroll'
 import AiPlanned from './pages/AiPlanned'
 import TravelSmart from './pages/TravelSmart'
 import ReadyForAdventure from './pages/ReadyForAdventure'
+import Sidebar from "./components/shared/Sidebar"
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <AiPlanned />
       <TravelSmart />
       <ReadyForAdventure />
+      <Sidebar />
     </>
   )
 }

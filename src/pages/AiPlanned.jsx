@@ -1,16 +1,47 @@
-import React from "react";
+import React, { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Button from "../components/ui/Button";
 import ImageMaps from "../assets/images/Maps.png";
 
+// Data itinerary per hari. Mau tambah hari? Cukup tambah satu blok { label, items } di sini.
+const itineraries = [
+  {
+    label: "Day 1",
+    items: [
+      { time: "08:00", title: "Morning activity", note: "10-min walk" },
+      { time: "12:00", title: "Local lunch", note: "20-min drive" },
+      { time: "17:30", title: "Sunset spot", note: "30-min bus ride" },
+    ],
+  },
+  {
+    label: "Day 2",
+    items: [
+      { time: "09:00", title: "Tegallalang rice terrace", note: "40-min drive" },
+      { time: "12:30", title: "Warung lunch in Ubud", note: "5-min walk" },
+      { time: "16:00", title: "Sacred Monkey Forest", note: "10-min walk" },
+    ],
+  },
+  {
+    label: "Day 3",
+    items: [
+      { time: "07:30", title: "Fast boat to Nusa Penida", note: "45-min boat ride" },
+      { time: "11:00", title: "Kelingking Beach", note: "25-min drive" },
+      { time: "15:30", title: "Snorkeling adventure", note: "15-min drive" },
+    ],
+  },
+];
+
 function AiPlanned() {
+  // activeDay: 0 = Day 1, 1 = Day 2, 2 = Day 3
+  const [activeDay, setActiveDay] = useState(0);
   return (
     <>
-      <section className="bg-secondarySage flex items-center gap-20">
-        <div className="px-20 py-20">
-          <h1 className="font-switzer font-bold text-5xl text-whitebright">
+      <section id="ai-planned" className="bg-secondarySage flex items-center gap-20 max-md:flex-col max-md:gap-0">
+        <div className="px-20 py-20 max-md:w-full max-md:px-10 max-md:py-12 max-sm:px-5">
+          <h1 className="font-switzer font-bold text-5xl text-whitebright max-sm:text-3xl">
             Your Trip, AI Planned
           </h1>
-          <p className="font-satoshi text-xl font-medium text-whitebright w-[500px]">
+          <p className="font-satoshi text-xl font-medium text-whitebright w-[500px] max-md:w-full max-sm:text-lg">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor
           </p>
@@ -58,7 +89,7 @@ function AiPlanned() {
           </div>
         </div>
 
-        <div className="relative bg-whitebright w-full max-w-2xl h-full px-6 py-6 rounded-xl mt-20 mb-20 shadow-xl">
+        <div className="relative bg-whitebright w-full max-w-2xl h-full px-6 py-6 rounded-xl mt-20 mb-20 shadow-xl max-md:w-auto max-md:self-stretch max-md:max-w-none max-md:mx-10 max-md:mt-0 max-md:mb-12 max-sm:mx-5 max-sm:px-4">
           <svg
             className="absolute bottom-0 right-0 pointer-events-none"
             width="221"
@@ -121,68 +152,65 @@ function AiPlanned() {
             </g>
           </svg>
 
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center max-sm:flex-col max-sm:items-start max-sm:gap-4">
             <h2 className="text-blackdark font-satoshi font-bold text-2xl">
               Previev itinerary
             </h2>
-            <div className="flex gap-3">
-              <Button className="bg-textMoss text-whitebright font-medium py-3 px-6">
-                Day 1
-              </Button>
-              <Button
-                className="border-2 border-textMoss  font-medium py-3 px-6"
-                variant="accent"
-              >
-                Day 2
-              </Button>
-              <Button
-                variant="accent"
-                className="border-2 border-textMoss  font-medium py-3 px-6"
-              >
-                Day 3
-              </Button>
+
+            {/* Tombol hari: klik untuk mengganti itinerary */}
+            <div role="tablist" className="flex gap-3 max-sm:gap-2">
+              {itineraries.map((day, index) => {
+                const isActive = index === activeDay;
+                return (
+                  <Button
+                    key={day.label}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    variant={isActive ? "primary" : "accent"}
+                    onClick={() => setActiveDay(index)}
+                    className={
+                      isActive
+                        ? "bg-textMoss text-whitebright font-medium py-3 px-6 cursor-pointer max-sm:px-4 max-sm:py-2"
+                        : "border-2 border-textMoss font-medium py-3 px-6 cursor-pointer hover:bg-textMoss/10 max-sm:px-4 max-sm:py-2"
+                    }
+                  >
+                    {day.label}
+                  </Button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="flex items-center gap-8 pt-6">
-            <p className="font-satoshi font-medium text-lg text-textLabel">
-              08:00
-            </p>
-            <div className="bg-backgroundIvory p-3 rounded-xl w-full ">
-              <h2 className="font-satoshi font-normal text-blackdark text-lg">
-                Morning activity
-              </h2>
-              <p className="font-satoshi font-normal text-textLabel text-base">
-                10-min walk
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-8 pt-6">
-            <p className="font-satoshi font-medium text-lg text-textLabel">
-              08:00
-            </p>
-            <div className="bg-backgroundIvory p-3 rounded-xl w-full ">
-              <h2 className="font-satoshi font-normal text-blackdark text-lg">
-                Local lunch
-              </h2>
-              <p className="font-satoshi font-normal text-textLabel text-base">
-                20-min drive
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-8 pt-6">
-            <p className="font-satoshi font-medium text-lg text-textLabel">
-              08:00
-            </p>
-            <div className="bg-backgroundIvory p-3 rounded-xl w-full ">
-              <h2 className="font-satoshi font-normal text-blackdark text-lg">
-                Sunset spot
-              </h2>
-              <p className="font-satoshi font-normal text-textLabel text-base">
-                30-min bus ride
-              </p>
-            </div>
-          </div>
+          {/* key={activeDay}: setiap hari berganti, daftar aktivitas muncul dengan animasi */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeDay}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.25 }}
+            >
+              {itineraries[activeDay].items.map((item) => (
+                <div
+                  key={item.title}
+                  className="flex items-center gap-8 pt-6 max-sm:gap-4"
+                >
+                  <p className="font-satoshi font-medium text-lg text-textLabel max-sm:text-base">
+                    {item.time}
+                  </p>
+                  <div className="bg-backgroundIvory p-3 rounded-xl w-full ">
+                    <h2 className="font-satoshi font-normal text-blackdark text-lg">
+                      {item.title}
+                    </h2>
+                    <p className="font-satoshi font-normal text-textLabel text-base">
+                      {item.note}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </AnimatePresence>
 
           <div className="pt-8">
             <img src={ImageMaps} alt="" />

@@ -5,7 +5,7 @@ import DestinationCard from "../components/destinations/DestinationCard";
 import DestinationModal from "../components/destinations/DestinationModal";
 
 const PIN_TOP = 48; // jarak konten dari atas layar saat menempel (px)
-const featured = destinations[0];
+const SWITCH_EVERY = 5000; // card besar ganti setiap 5 detik (ms)
 
 // Muncul halus saat masuk layar
 function Reveal({ children, delay = 0, from = { y: 40 } }) {
@@ -24,6 +24,7 @@ function Reveal({ children, delay = 0, from = { y: 40 } }) {
 function Destinations() {
   const [selected, setSelected] = useState(null); // { item, layoutKey }
   const [travel, setTravel] = useState(0); // jarak card kecil bergeser (px)
+  const [featured, setFeatured] = useState(destinations[0]); // card besar (awalnya Bali)
   const y = useMotionValue(0);
 
   const wrapperRef = useRef(null);
@@ -51,10 +52,24 @@ function Destinations() {
     };
   }, [y]);
 
+  // Card besar berganti ke destinasi acak (tidak pernah sama dengan yang sedang tampil)
+  useEffect(() => {
+    if (selected) return; // berhenti berganti saat modal terbuka
+
+    const timer = setInterval(() => {
+      setFeatured((current) => {
+        const others = destinations.filter((d) => d.id !== current.id);
+        return others[Math.floor(Math.random() * others.length)];
+      });
+    }, SWITCH_EVERY);
+
+    return () => clearInterval(timer);
+  }, [selected]);
+
   const select = (item, layoutKey) => setSelected({ item, layoutKey });
 
   return (
-    <section className="bg-backgroundIvory px-20 pt-44 pb-44 max-md:px-10 max-sm:px-5">
+    <section id="destinations" className="bg-backgroundIvory px-20 pt-44 pb-44 max-md:px-10 max-md:pt-28 max-md:pb-28 max-sm:px-5">
       <div ref={wrapperRef}>
         {/* Bagian yang menempel: judul + card besar diam, card kecil bergeser */}
         <div style={{ top: PIN_TOP }} className="sticky max-md:static">

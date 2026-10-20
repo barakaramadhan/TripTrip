@@ -7,17 +7,17 @@ import ImageTravel3 from "../assets/images/Daily.png";
 function TravelSmart() {
   return (
     <>
-      <section className="bg-backgroundIvory px-20 pt-44 pb-96">
+      <section id="travel-smart" className="bg-backgroundIvory px-20 pt-44 pb-96 max-md:px-10 max-md:pt-28 max-md:pb-48 max-sm:px-5">
         <div>
-          <h1 className="font-switzer font-bold text-5xl text-black">
+          <h1 className="font-switzer font-bold text-5xl text-black max-sm:text-3xl">
             Travel Smarter
           </h1>
-          <p className="font-satoshi font-normal text-xl text-blackdark w-[500px]">
+          <p className="font-satoshi font-normal text-xl text-blackdark w-[500px] max-md:w-full">
             Three features for a more time- and cost-efficient journey.
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-4 pt-8">
+        <div className="grid grid-cols-3 gap-4 pt-8 max-md:grid-cols-1">
           <Card className="col-span-1 row-span-2 min-h-96 w-full bg-whitebright px-4 py-5">
             <img src={ImageTravel1} alt="" />
             <div className="relative z-10 p-5">

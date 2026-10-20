@@ -4,7 +4,7 @@ import Input from "../components/ui/Input";
 
 function StarPlanning() {
   return (
-    <section className="relative z-40 flex justify-center px-20 max-sm:px-4 bg-backgroundIvory">
+    <section id="start-planning" className="relative z-40 flex justify-center px-20 max-md:px-10 max-sm:px-4 bg-backgroundIvory">
       <div className="relative -mt-30 w-full  bg-whitebright rounded-2xl px-6 py-7 shadow-xl">
         <svg
           className="absolute pointer-events-none top-0 left-0"
