@@ -17,5 +17,9 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    rules: {
+      // `motion` dipakai lewat JSX (<motion.div>), jadi jangan dianggap variabel nganggur
+      "no-unused-vars": ["error", { varsIgnorePattern: "^motion$" }],
+    },
   },
 ])

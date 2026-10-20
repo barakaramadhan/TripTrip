@@ -14,3 +14,11 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Setup Sign In / Sign Up (Supabase)
+
+1. `npm install`
+2. Salin `.env.example` menjadi `.env`, isi `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`
+3. Jalankan isi `supabase/schema.sql` di Supabase Dashboard -> SQL Editor
+4. Taruh foto latar di `public/backgrounds/` (lihat README di folder itu)
+5. `npm run dev` lalu buka `/signin` atau `/signup`
