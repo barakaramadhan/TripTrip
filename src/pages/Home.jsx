@@ -16,7 +16,7 @@ function Home() {
         </h1>
 
         <div className="relative -mt-14 z-10">
-          <h2 className="absolute -top-5 left-2.5 text-[208px] whitespace-nowrap text-secondarySage/40 font-bold [-webkit-text-stroke:1.5px_var(--color-textMoss)]">
+          <h2 className="absolute -top-5 left-4 text-[208px] whitespace-nowrap text-secondarySage/40 font-bold [-webkit-text-stroke:1.5px_var(--color-textMoss)]">
             ADVENTURE <span className="font-switzer">.</span>
           </h2>
           <h2 className="relative text-[208px] text-textMoss font-bold font-switzer tracking-wide">
