@@ -1,120 +1,84 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import useLockScroll from "../../hooks/useLockScroll";
+import { useState } from "react";
 import Button from "../ui/Button";
-import { EASE_OUT } from "../../animations/variants";
 
-// Ikon kecil (SVG) supaya tidak bergantung pada library ikon lain.
-function Icon({ children }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="size-5"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true">
-      {children}
-    </svg>
-  );
-}
-
-const ITEMS = [
-  {
-    label: "Home",
-    href: "#",
-    icon: <path d="M4 10.5 12 4l8 6.5V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" />,
-  },
-  {
-    label: "Destination",
-    href: "#destinations",
-    icon: (
-      <>
-        <path d="M12 21s-6-5.6-6-10a6 6 0 0 1 12 0c0 4.4-6 10-6 10z" />
-        <circle cx="12" cy="11" r="2" />
-      </>
-    ),
-  },
-  {
-    label: "Plan a Trip",
-    href: "#planner",
-    icon: (
-      <>
-        <circle cx="6" cy="18" r="2" />
-        <circle cx="18" cy="6" r="2" />
-        <path d="M8.5 18H14a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h5.5" />
-      </>
-    ),
-  },
+const menuItems = [
+  { name: "Home", iconClass: "fi fi-rr-house-blank" },
+  { name: "Destination", iconClass: "fi fi-rr-marker" },
+  { name: "Plan a Trip", iconClass: "fi fi-rr-route" },
 ];
 
-// Menu samping (tampilan untuk tamu / guest): daftar halaman + tombol Sign Up di bawah.
-function SideMenu({ onClose }) {
-  const [active, setActive] = useState("Home");
-  useLockScroll();
-
-  // Tekan Esc untuk menutup menu
-  useEffect(() => {
-    const onKey = (e) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
-  const choose = (label) => {
-    setActive(label);
-    onClose();
-  };
+function SideMenu({ open, onClose }) {
+  const [activeTab, setActiveTab] = useState("Home");
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
+      {/* 1. Backdrop Overlay: Menutup sidebar jika diklik di mana saja di luar sidebar */}
+      <div
         onClick={onClose}
-        className="z-[60] fixed inset-0 bg-black/30"
+        className={`fixed inset-0 bg-black/20 backdrop-blur-xs z-40 transition-opacity duration-300 ${
+          open
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
       />
 
-      <motion.aside
-        role="dialog"
-        aria-label="Menu"
-        initial={{ x: "110%" }}
-        animate={{ x: 0 }}
-        exit={{ x: "110%" }}
-        transition={{ duration: 0.35, ease: EASE_OUT }}
-        className="right-0 z-[70] fixed inset-y-0 flex flex-col bg-whitebright shadow-xl border border-secondarySage rounded-l-3xl w-[min(17rem,calc(100vw-1.5rem))] font-satoshi text-textMoss">
-        <nav className="flex flex-col flex-1 gap-2 p-3">
-          {ITEMS.map(({ label, href, icon }) => {
-            const isActive = active === label;
+      {/* 2. Sidebar Container: Animasi Translate dari Kanan ke Kiri */}
+      <aside
+        className={`fixed right-0 top-0 w-80 h-screen bg-whitebright rounded-l-3xl flex flex-col p-6 shadow-xl z-50 transition-transform duration-300 ease-in-out ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}>
+        {/* Tombol Close Sederhana di Atas Navigasi */}
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={onClose}
+            className="p-2 text-textMoss hover:text-primaryForest cursor-pointer"
+            aria-label="Tutup menu">
+            <i className="flex items-center text-lg fi fi-br-cross"></i>
+          </button>
+        </div>
+
+        <nav className="flex flex-col flex-1 gap-2">
+          {menuItems.map((item) => {
+            const isActive = activeTab === item.name;
+
             return (
-              <a
-                key={label}
-                href={href}
-                onClick={() => choose(label)}
-                className={`relative flex items-center justify-between rounded-2xl px-4 py-3 transition-colors ${
-                  isActive ? "bg-secondarySage/40" : "hover:bg-secondarySage/20"
+              <button
+                key={item.name}
+                onClick={() => setActiveTab(item.name)}
+                className={`relative flex items-center justify-between p-4 pr-10 rounded-2xl transition-colors cursor-pointer ${
+                  isActive
+                    ? "bg-secondarySage/40 text-primaryForest font-semibold border-none"
+                    : "text-textMoss hover:bg-gray-50 font-normal"
                 }`}>
-                {label}
-                <Icon>{icon}</Icon>
+                <span className="font-satoshi text-base">{item.name}</span>
+                <i
+                  className={`${item.iconClass} text-xl leading-none flex items-center`}></i>
+
                 {isActive && (
-                  <span className="top-1/2 -right-3 absolute bg-primaryForest rounded-l-full w-1 h-6 -translate-y-1/2" />
+                  <svg
+                    width="6"
+                    height="22"
+                    viewBox="0 0 3 22"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="top-1/2 right-0 absolute -translate-y-1/2">
+                    <path
+                      d="M0 3C0 1.34315 1.34315 0 3 0V0V22V22C1.34315 22 0 20.6569 0 19V3Z"
+                      fill="#244B3A"
+                    />
+                  </svg>
                 )}
-              </a>
+              </button>
             );
           })}
         </nav>
 
-        <div className="p-3 border-secondarySage/40 border-t">
-          <Button
-            to="/signup"
-            onClick={onClose}
-            className="py-3.5 w-full text-lg">
+        <div className="pt-6 border-secondarySage/20 border-t">
+          <Button variant="primary" className="w-full">
             Sign Up
           </Button>
         </div>
-      </motion.aside>
+      </aside>
     </>
   );
 }

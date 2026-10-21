@@ -1,26 +1,26 @@
-import { lazy, Suspense, useEffect } from 'react'
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import LandingPage from './pages/LandingPage'
+import { lazy, Suspense, useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router";
+import LandingPage from "./pages/LandingPage";
 
 // Halaman auth dimuat saat dibutuhkan saja, jadi landing page lebih ringan
 // dan tidak ikut memuat Supabase.
-const AuthLayout = lazy(() => import('./components/auth/AuthLayout'))
-const SignIn = lazy(() => import('./pages/SignIn'))
-const SignUp = lazy(() => import('./pages/SignUp'))
+const AuthLayout = lazy(() => import("./components/auth/AuthLayout"));
+const SignIn = lazy(() => import("./pages/SignIn"));
+const SignUp = lazy(() => import("./pages/SignUp"));
 
 function ScrollToTop() {
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [pathname])
-  return null
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
 }
 
 function App() {
   return (
     <>
       <ScrollToTop />
-      <Suspense fallback={<div className="min-h-dvh bg-backgroundIvory" />}>
+      <Suspense fallback={<div className="bg-backgroundIvory min-h-dvh" />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
 
@@ -34,7 +34,7 @@ function App() {
         </Routes>
       </Suspense>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
