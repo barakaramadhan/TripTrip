@@ -1,13 +1,14 @@
 import { useState } from "react";
 import Button from "../ui/Button";
 
+// href "#..." = meluncur halus ke bagian landing page (Lenis menangani anchor)
 const menuItems = [
-  { name: "Home", iconClass: "fi fi-rr-house-blank" },
-  { name: "Destination", iconClass: "fi fi-rr-marker" },
-  { name: "Plan a Trip", iconClass: "fi fi-rr-route" },
+  { name: "Home", href: "#top", iconClass: "fi fi-rr-house-blank" },
+  { name: "Destination", href: "#destinations", iconClass: "fi fi-rr-marker" },
+  { name: "Plan a Trip", href: "#planner", iconClass: "fi fi-rr-route" },
 ];
 
-function SideMenu({ open, onClose }) {
+function SideMenu({ open, onClose, isLoggedIn = false }) {
   const [activeTab, setActiveTab] = useState("Home");
 
   return (
@@ -42,9 +43,13 @@ function SideMenu({ open, onClose }) {
             const isActive = activeTab === item.name;
 
             return (
-              <button
+              <a
                 key={item.name}
-                onClick={() => setActiveTab(item.name)}
+                href={item.href}
+                onClick={() => {
+                  setActiveTab(item.name);
+                  onClose();
+                }}
                 className={`relative flex items-center justify-between p-4 pr-10 rounded-2xl transition-colors cursor-pointer ${
                   isActive
                     ? "bg-secondarySage/40 text-primaryForest font-semibold border-none"
@@ -68,15 +73,26 @@ function SideMenu({ open, onClose }) {
                     />
                   </svg>
                 )}
-              </button>
+              </a>
             );
           })}
         </nav>
 
-        <div className="pt-6 border-secondarySage/20 border-t">
-          <Button variant="primary" className="w-full">
-            Sign Up
-          </Button>
+        <div className="flex flex-col gap-2 pt-6 border-secondarySage/20 border-t">
+          {isLoggedIn ? (
+            <Button to="/dashboard" variant="primary" className="w-full">
+              My Dashboard
+            </Button>
+          ) : (
+            <>
+              <Button to="/signin" variant="secondary" className="w-full">
+                Sign In
+              </Button>
+              <Button to="/signup" variant="primary" className="w-full">
+                Sign Up
+              </Button>
+            </>
+          )}
         </div>
       </aside>
     </>

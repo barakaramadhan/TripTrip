@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import { initials } from "../../utils/format";
 
 const NAV = [
@@ -39,12 +39,15 @@ export default function Sidebar({ collapsed, onToggle, name }) {
       transition={SPRING}
       className="top-3 sticky flex flex-col gap-4 h-[calc(100dvh-1.5rem)] shrink-0">
       {/* Brand */}
-      <div className="flex items-center gap-4 bg-whitebright/70 px-4 border border-secondarySage/60 rounded-3xl h-[5.5rem] overflow-hidden">
+      <Link
+        to="/"
+        title="Kembali ke website"
+        className="flex items-center gap-4 bg-whitebright/70 px-4 border border-secondarySage/60 rounded-3xl h-[5.5rem] overflow-hidden">
         <div className="flex justify-center items-center bg-textMoss rounded-full size-12 font-switzer font-bold text-white text-2xl shrink-0">L</div>
         <Fade show={open} className="font-switzer font-semibold text-textMoss text-lg">
           <span className="block pb-1 border-secondarySage border-b border-dashed">TripTrip.com</span>
         </Fade>
-      </div>
+      </Link>
 
       {/* Navigasi */}
       <nav className="relative flex flex-col flex-1 gap-2 bg-whitebright/70 p-3 border border-secondarySage/60 rounded-3xl">

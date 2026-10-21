@@ -5,6 +5,7 @@ import LeafCorner from "../components/shared/LeafCorner";
 import Reveal from "../components/shared/Reveal";
 import ImageMaps from "../assets/images/Maps.webp";
 import { EASE_OUT, SPRING } from "../animations/variants";
+import { useSession } from "../hooks/useSession";
 
 const STEPS = [
   { title: "Set your preferences", desc: "Destination, dates, budget, and travel style" },
@@ -32,6 +33,7 @@ const ITINERARY = {
 const DAYS = Object.keys(ITINERARY);
 
 function AiPlanned() {
+  const { user } = useSession(); // sudah login -> tombol mengarah ke dashboard
   const [day, setDay] = useState(DAYS[0]);
 
   return (
@@ -62,7 +64,7 @@ function AiPlanned() {
           </ol>
 
           <Reveal delay={0.4} className="mt-8 sm:mt-10">
-            <Button to="/signup" className="px-7 py-3">
+            <Button to={user ? "/dashboard" : "/signup"} className="px-7 py-3">
               Try It Now!
             </Button>
           </Reveal>

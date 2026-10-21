@@ -62,7 +62,7 @@ export default function SignUp() {
         setDirection(1);
         setIsEmailSent(true);
       } else {
-        navigate("/"); // konfirmasi email dimatikan -> user langsung login
+        navigate("/dashboard"); // konfirmasi email dimatikan -> user langsung login, masuk dashboard
       }
     } catch (error) {
       setServerError(error.message);

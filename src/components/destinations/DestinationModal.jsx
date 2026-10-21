@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Button from "../ui/Button";
 import useLockScroll from "../../hooks/useLockScroll";
+import { useSession } from "../../hooks/useSession";
 
 const stats = [
   { icon: "fi-rr-calendar", label: "Duration", field: "duration" },
@@ -22,6 +23,7 @@ const reveal = (order) => ({
 
 function DestinationModal({ item, layoutKey, onClose }) {
   useLockScroll();
+  const { user } = useSession();
 
   useEffect(() => {
     const onKeyDown = (event) => event.key === "Escape" && onClose();
@@ -148,7 +150,12 @@ function DestinationModal({ item, layoutKey, onClose }) {
             {...reveal(5)}
             className="mt-auto flex gap-3 max-sm:flex-col"
           >
-            <Button className="px-6 py-3">Plan this trip</Button>
+            {/* Sudah login -> buka Plan a Trip dengan tujuan terisi; belum -> daftar dulu */}
+            <Button
+              to={user ? `/dashboard/plan?dest=${item.name.toLowerCase()}` : "/signup"}
+              className="px-6 py-3">
+              Plan this trip
+            </Button>
             <Button variant="accent" className="px-6 py-3" onClick={onClose}>
               Back to destinations
             </Button>

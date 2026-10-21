@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useMotionValue } from "framer-motion";
+import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-motion";
 import { destinations } from "../data/destinations";
 import DestinationCard from "../components/destinations/DestinationCard";
 import DestinationModal from "../components/destinations/DestinationModal";
 import Reveal from "../components/shared/Reveal";
 
 const PIN_TOP = 48; // jarak konten dari atas layar saat menempel (px)
+
+// Judul memudar saat mendekati header kaca (tinggi header ~64px), hilang sementara selama menempel
+const HEADER_ZONE = 64;
+const FADE_DISTANCE = 110;
 
 // Tinggi area card di desktop: menyesuaikan tinggi layar supaya tidak terpotong
 const AREA_HEIGHT = "lg:h-[clamp(30rem,calc(100svh-14rem),42.5rem)]";
@@ -23,8 +27,13 @@ function Destinations() {
   const [selected, setSelected] = useState(null); // { item, layoutKey }
   const [travel, setTravel] = useState(0); // jarak card kecil bergeser (px)
   const y = useMotionValue(0);
+  const headingGap = useMotionValue(FADE_DISTANCE); // jarak judul ke bawah header (px)
+  const headingOpacity = useTransform(headingGap, [0, FADE_DISTANCE], [0, 1]);
+  const headingShift = useTransform(headingGap, [0, FADE_DISTANCE], [-14, 0]);
+  const headingBlur = useTransform(headingGap, [0, FADE_DISTANCE], ["blur(6px)", "blur(0px)"]);
 
   const wrapperRef = useRef(null);
+  const stickyRef = useRef(null);
   const windowRef = useRef(null);
   const trackRef = useRef(null);
 
@@ -34,6 +43,10 @@ function Destinations() {
     const desktop = window.matchMedia("(min-width: 1024px)");
 
     const update = () => {
+      // Judul: makin dekat ke header kaca makin pudar
+      const gap = stickyRef.current.getBoundingClientRect().top - HEADER_ZONE;
+      headingGap.set(Math.min(Math.max(gap, 0), FADE_DISTANCE));
+
       if (!desktop.matches) {
         setTravel(0);
         y.set(0);
@@ -58,7 +71,7 @@ function Destinations() {
       desktop.removeEventListener("change", update);
       window.removeEventListener("scroll", update);
     };
-  }, [y]);
+  }, [y, headingGap]);
 
   const select = (item, layoutKey) => setSelected({ item, layoutKey });
 
@@ -69,9 +82,11 @@ function Destinations() {
     >
       <div ref={wrapperRef}>
         {/* Bagian yang menempel (desktop): judul + card besar diam, card kecil bergeser */}
-        <div style={{ top: PIN_TOP }} className="lg:sticky">
+        <div ref={stickyRef} style={{ top: PIN_TOP }} className="lg:sticky">
           <Reveal>
-            <div className="pb-8 sm:pb-10">
+            <motion.div
+              style={{ opacity: headingOpacity, y: headingShift, filter: headingBlur }}
+              className="pb-8 sm:pb-10">
               <h1 className="font-switzer text-3xl font-bold text-blackdark sm:text-4xl lg:text-5xl">
                 Find Your Next Somewhere
               </h1>
@@ -79,7 +94,7 @@ function Destinations() {
                 Discover destinations tailored to your travel style, with trip types
                 and duration estimates.
               </p>
-            </div>
+            </motion.div>
           </Reveal>
 
           <div className={`grid gap-4 sm:gap-6 lg:grid-cols-4 ${AREA_HEIGHT}`}>

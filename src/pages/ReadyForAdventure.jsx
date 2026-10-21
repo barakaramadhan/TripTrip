@@ -1,69 +1,68 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import React, { useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useReducedMotion,
+} from "framer-motion";
 import Button from "../components/ui/Button";
-import BigWord from "../components/shared/BigWord";
-import Reveal from "../components/shared/Reveal";
 import ImageReady from "../assets/images/ReadyForAn.webp";
-import { EASE_OUT } from "../animations/variants";
 
 export default function ReadyForAdventure() {
   const sectionRef = useRef(null);
+  const reduceMotion = useReducedMotion(); // hormati pengguna yang mematikan animasi
+
+  // scrollYProgress: 0 = section baru muncul dari bawah layar, 1 = section sudah pas di layar.
+  // Di angka 1 semua posisi kembali normal (sama seperti desain awal).
   const { scrollYProgress } = useScroll({
     target: sectionRef,
-    offset: ["start end", "end start"],
+    offset: ["start end", "end end"],
   });
-  const contentY = useTransform(scrollYProgress, [0, 1], [36, -36]);
-  const imageY = useTransform(scrollYProgress, [0, 1], [90, -70]);
+
+  // Kota: bergerak lebih lambat dari scroll + zoom out pelan => terasa jauh
+  const cityY = useTransform(scrollYProgress, [0, 1], ["-14%", "0%"]);
+  const cityScale = useTransform(scrollYProgress, [0, 1], [1.12, 1]);
+
+  // Tulisan: mulai agak turun (tersembunyi di belakang gedung), lalu naik muncul
+  const textY = useTransform(scrollYProgress, [0, 1], ["45%", "0%"]);
+
+  // Tulisan outline di belakang: bergerak sedikit beda supaya ada kesan berlapis
+  const outlineY = useTransform(scrollYProgress, [0, 1], ["18%", "0%"]);
 
   return (
-    <section
-      ref={sectionRef}
-      className="isolate relative flex flex-col items-center bg-backgroundIvory min-h-[max(36rem,88svh)] sm:min-h-[max(40rem,100svh)] overflow-hidden">
-      <motion.div
-        style={{ y: contentY }}
-        className="z-10 relative flex flex-col items-center px-5 sm:px-10 pt-16 sm:pt-20 lg:pt-24 text-center">
-        <Reveal
-          as="h1"
-          from={{ y: 24 }}
-          className="font-switzer font-semibold text-[clamp(1.6rem,4.2vw,3rem)] text-textMoss">
-          Ready for an
-        </Reveal>
+    <>
+      <section
+        ref={sectionRef}
+        className="relative flex flex-col bg-backgroundIvory min-h-screen max-md:min-h-[560px] overflow-hidden">
+        <motion.img
+          src={ImageReady}
+          alt=""
+          style={reduceMotion ? undefined : { y: cityY, scale: cityScale }}
+          className="z-20 absolute inset-0 -mt-28 max-md:mt-0 w-full max-md:h-full object-contain max-md:object-bottom origin-bottom will-change-transform"
+        />
 
-        <div className="relative mt-[-0.05em] text-[clamp(2.2rem,12.4vw,12.5rem)]">
-          <ReadyWord />
-        </div>
+        <motion.div
+          style={reduceMotion ? undefined : { y: textY }}
+          className="z-10 flex flex-col items-center px-14 max-md:px-4 max-md:pt-16">
+          <h1 className="font-switzer font-semibold text-textMoss max-sm:text-3xl text-5xl">
+            Ready for an
+          </h1>
 
-      </motion.div>
+          <div className="relative -mt-10 max-md:-mt-3">
+            <motion.h2
+              style={reduceMotion ? undefined : { y: outlineY }}
+              className="-top-4 max-md:-top-2 left-2 max-md:left-1 absolute font-bold [-webkit-text-stroke:1.5px_var(--color-textMoss)] text-[200px] text-secondarySage/40 max-md:[-webkit-text-stroke:1px_var(--color-textMoss)] max-md:text-[13vw] whitespace-nowrap">
+              ADVENTURE <span className="font-switzer">?</span>
+            </motion.h2>
 
-      <Reveal delay={0.3} className="z-30 relative mt-6 sm:mt-8">
-        <Button to="/signup" className="px-8 py-3 text-lg">
-          Start Planning
-        </Button>
-      </Reveal>
+            <h2 className="relative font-switzer font-bold text-[200px] text-textMoss max-md:text-[13vw]">
+              ADVENTURE ?
+            </h2>
+          </div>
+        </motion.div>
 
-      <motion.img
-        src={ImageReady}
-        alt=""
-        loading="lazy"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 1.2, ease: EASE_OUT }}
-        style={{ y: imageY }}
-        className="bottom-0 z-20 absolute inset-x-0 w-full h-[40svh] sm:h-auto object-[35%_bottom] object-cover sm:object-contain pointer-events-none"
-      />
-    </section>
-  );
-}
-
-// BigWord memainkan animasinya saat mount, jadi ditunda sampai section terlihat
-function ReadyWord() {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, amount: 0.3 }}>
-      <BigWord text="ADVENTURE?" delay={0.05} />
-    </motion.div>
+        <Button className="z-30 self-center p-3 w-40">Start Planning</Button>
+      </section>
+    </>
   );
 }
