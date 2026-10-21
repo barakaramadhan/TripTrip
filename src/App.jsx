@@ -1,39 +1,38 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
-import AuthLayout from './components/auth/AuthLayout'
-import Home from './pages/Home'
-import SignIn from './pages/SignIn'
-import SignUp from './pages/SignUp'
+import { lazy, Suspense, useEffect } from 'react'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
+import LandingPage from './pages/LandingPage'
 
-function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
+// Halaman auth dimuat saat dibutuhkan saja, jadi landing page lebih ringan
+// dan tidak ikut memuat Supabase.
+const AuthLayout = lazy(() => import('./components/auth/AuthLayout'))
+const SignIn = lazy(() => import('./pages/SignIn'))
+const SignUp = lazy(() => import('./pages/SignUp'))
 
-      {/* Sign In & Sign Up berbagi satu layout, jadi sisi kiri tidak di-reload saat pindah halaman */}
-      <Route element={<AuthLayout />}>
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
-      </Route>
-
-      <Route path="*" element={<Navigate to="/signin" replace />} />
-    </Routes>
-import StarPlanning from './pages/StarPlanning'
-import Destinations from './pages/Destinations'
-import SmoothScroll from './components/shared/SmoothScroll'
-import AiPlanned from './pages/AiPlanned'
-import TravelSmart from './pages/TravelSmart'
-import ReadyForAdventure from './pages/ReadyForAdventure'
+function ScrollToTop() {
+  const { pathname } = useLocation()
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+  return null
+}
 
 function App() {
   return (
     <>
-      <Home />
-      <StarPlanning />
-      <Destinations />
-      <SmoothScroll />
-      <AiPlanned />
-      <TravelSmart />
-      <ReadyForAdventure />
+      <ScrollToTop />
+      <Suspense fallback={<div className="min-h-dvh bg-backgroundIvory" />}>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+
+          {/* Sign In & Sign Up berbagi satu layout, jadi sisi kiri tidak di-reload saat pindah halaman */}
+          <Route element={<AuthLayout />}>
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </>
   )
 }

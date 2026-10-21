@@ -3,23 +3,14 @@ import { AnimatePresence, motion, useMotionValue } from "framer-motion";
 import { destinations } from "../data/destinations";
 import DestinationCard from "../components/destinations/DestinationCard";
 import DestinationModal from "../components/destinations/DestinationModal";
+import Reveal from "../components/shared/Reveal";
 
 const PIN_TOP = 48; // jarak konten dari atas layar saat menempel (px)
 const featured = destinations[0];
+const others = destinations.slice(1); // card besar tidak diulang di grid kecil
 
-// Muncul halus saat masuk layar
-function Reveal({ children, delay = 0, from = { y: 40 } }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, ...from }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: true, amount: 0.1 }}
-      transition={{ duration: 0.7, delay, ease: "easeOut" }}
-    >
-      {children}
-    </motion.div>
-  );
-}
+// Tinggi area card di desktop: menyesuaikan tinggi layar supaya tidak terpotong
+const AREA_HEIGHT = "lg:h-[clamp(30rem,calc(100svh-14rem),42.5rem)]";
 
 function Destinations() {
   const [selected, setSelected] = useState(null); // { item, layoutKey }
@@ -30,23 +21,34 @@ function Destinations() {
   const windowRef = useRef(null);
   const trackRef = useRef(null);
 
-  // Saat section menempel, geser card kecil mengikuti scroll
+  // Di desktop: saat section menempel, card kecil bergeser mengikuti scroll.
+  // Di layar kecil: grid biasa, tanpa efek menempel.
   useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1024px)");
+
     const update = () => {
+      if (!desktop.matches) {
+        setTravel(0);
+        y.set(0);
+        return;
+      }
       const distance = Math.max(0, trackRef.current.offsetHeight - windowRef.current.offsetHeight);
       const scrolled = PIN_TOP - wrapperRef.current.getBoundingClientRect().top;
 
-      setTravel(distance);
+      setTravel((prev) => (prev === distance ? prev : distance));
       y.set(-Math.min(Math.max(scrolled, 0), distance));
     };
 
+    update();
     const observer = new ResizeObserver(update);
     observer.observe(trackRef.current);
     observer.observe(windowRef.current);
+    desktop.addEventListener("change", update);
     window.addEventListener("scroll", update, { passive: true });
 
     return () => {
       observer.disconnect();
+      desktop.removeEventListener("change", update);
       window.removeEventListener("scroll", update);
     };
   }, [y]);
@@ -54,38 +56,38 @@ function Destinations() {
   const select = (item, layoutKey) => setSelected({ item, layoutKey });
 
   return (
-    <section className="bg-backgroundIvory px-20 pt-44 pb-44 max-md:px-10 max-sm:px-5">
+    <section
+      id="destinations"
+      className="bg-backgroundIvory px-5 pt-20 pb-20 sm:px-10 sm:pt-28 lg:px-20 lg:pt-44 lg:pb-32"
+    >
       <div ref={wrapperRef}>
-        {/* Bagian yang menempel: judul + card besar diam, card kecil bergeser */}
-        <div style={{ top: PIN_TOP }} className="sticky max-md:static">
+        {/* Bagian yang menempel (desktop): judul + card besar diam, card kecil bergeser */}
+        <div style={{ top: PIN_TOP }} className="lg:sticky">
           <Reveal>
-            <div className="pb-10">
-              <h1 className="font-switzer font-bold text-5xl text-blackdark max-sm:text-3xl">
+            <div className="pb-8 sm:pb-10">
+              <h1 className="font-switzer text-3xl font-bold text-blackdark sm:text-4xl lg:text-5xl">
                 Find Your Next Somewhere
               </h1>
-              <p className="font-satoshi font-medium text-blackdark text-xl w-2xl max-md:w-full">
+              <p className="mt-2 max-w-2xl font-satoshi text-lg font-medium text-blackdark sm:text-xl">
                 Discover destinations tailored to your travel style, with trip types
                 and duration estimates.
               </p>
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-4 gap-6 max-md:grid-cols-1">
-            <Reveal from={{ x: -40 }}>
+          <div className={`grid gap-4 sm:gap-6 lg:grid-cols-4 ${AREA_HEIGHT}`}>
+            <Reveal from={{ x: -40 }} className="lg:h-full">
               <DestinationCard item={featured} layoutKey="featured" featured onSelect={select} />
             </Reveal>
 
-            {/* Jendela: card baris bawah tersembunyi sampai digeser naik */}
-            <div
-              ref={windowRef}
-              className="col-span-3 h-[680px] overflow-hidden max-md:col-span-1 max-md:h-auto max-md:overflow-visible"
-            >
+            {/* Jendela: card baris bawah tersembunyi sampai digeser naik (desktop) */}
+            <div ref={windowRef} className="lg:col-span-3 lg:h-full lg:overflow-hidden">
               <motion.div
                 ref={trackRef}
                 style={{ y }}
-                className="grid grid-cols-3 gap-6 max-md:grid-cols-2 max-sm:grid-cols-1"
+                className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3"
               >
-                {destinations.map((item, index) => (
+                {others.map((item, index) => (
                   <Reveal key={item.id} delay={(index % 3) * 0.1}>
                     <DestinationCard item={item} layoutKey={item.id} onSelect={select} />
                   </Reveal>

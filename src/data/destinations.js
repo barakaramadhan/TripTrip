@@ -1,11 +1,11 @@
-import ImageBali from "../assets/images/Bali.png";
-import ImageTokyo from "../assets/images/tokyo.png";
-import ImageZermatt from "../assets/images/zermatt.png";
-import ImageKyoto from "../assets/images/kyoto.png";
-import ImageLauterbrunnen from "../assets/images/lauterbrunnen.png";
-import ImageSantorini from "../assets/images/cappadocia.png";
-import ImageUbud from "../assets/images/ubud.png";
-import ImageMarrakech from "../assets/images/marrakech.png";
+import ImageBali from "../assets/images/Bali.webp";
+import ImageTokyo from "../assets/images/tokyo.webp";
+import ImageZermatt from "../assets/images/zermatt.webp";
+import ImageKyoto from "../assets/images/kyoto.webp";
+import ImageLauterbrunnen from "../assets/images/lauterbrunnen.webp";
+import ImageSantorini from "../assets/images/santorini.webp";
+import ImageUbud from "../assets/images/ubud.webp";
+import ImageMarrakech from "../assets/images/marrakech.webp";
 
 export const destinations = [
   {

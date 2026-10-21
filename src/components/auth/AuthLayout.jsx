@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useLocation, useOutlet } from "react-router-dom";
+import { Link, useLocation, useOutlet } from "react-router-dom";
 import HeroPanel from "./HeroPanel";
 import { HERO_BY_PATH } from "../../constants/authContent";
 
@@ -20,7 +20,14 @@ export default function AuthLayout() {
     <main className="relative flex bg-white min-h-dvh overflow-hidden font-satoshi text-textMoss">
       <HeroPanel lines={hero.lines} />
 
-      <section className="z-20 relative flex justify-center items-center bg-white px-6 py-10 w-full lg:w-1/2">
+      <section className="z-20 relative flex justify-center items-center bg-white px-6 pt-20 pb-10 w-full lg:w-1/2">
+        <Link
+          to="/"
+          className="top-6 left-6 absolute flex items-center gap-2 font-switzer font-bold hover:opacity-70 transition-opacity">
+          <i className="inline-flex fi fi-rr-angle-small-left" />
+          TripTrip.com
+        </Link>
+
         <div className="w-full max-w-[24rem]">
           {/* mode="wait": halaman lama keluar dulu, baru halaman baru masuk */}
           <AnimatePresence mode="wait">

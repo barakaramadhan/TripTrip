@@ -32,7 +32,7 @@ export default function SignUpLocationStep({ direction, values, errors, serverEr
         error={errors.address}
       />
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-4">
         <FormField
           label="City"
           name="city"

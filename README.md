@@ -1,24 +1,20 @@
-# React + Vite
+# TripTrip
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Landing page + Sign In / Sign Up (Supabase) dibangun dengan React, Vite, Tailwind v4, dan Framer Motion.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
-## Setup Sign In / Sign Up (Supabase)
+## Menjalankan
 
 1. `npm install`
 2. Salin `.env.example` menjadi `.env`, isi `VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`
 3. Jalankan isi `supabase/schema.sql` di Supabase Dashboard -> SQL Editor
-4. Taruh foto latar di `public/backgrounds/` (lihat README di folder itu)
-5. `npm run dev` lalu buka `/signin` atau `/signup`
+4. `npm run dev`, lalu buka `/` (landing), `/signin`, atau `/signup`
+
+Landing page tetap bisa dibuka walau `.env` belum diisi; error hanya muncul di form Sign In / Sign Up.
+
+## Struktur singkat
+
+- `src/pages/LandingPage.jsx` — menggabungkan semua section landing
+- `src/pages/*.jsx` — section: Home (hero), StarPlanning, Destinations, AiPlanned, TravelSmart, ReadyForAdventure
+- `src/components/shared` — Navbar, Reveal (animasi scroll), BigWord (judul raksasa), LeafCorner, SmoothScroll
+- `src/animations/variants.js` — semua resep animasi
+- `src/assets/images` — semua gambar sudah WebP (total ~2 MB, sebelumnya ~45 MB)

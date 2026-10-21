@@ -3,11 +3,9 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Supabase belum dikonfigurasi. Salin .env.example menjadi .env, isi URL & anon key, lalu restart `npm run dev`.',
-  )
-}
+// Tidak lagi melempar error saat .env kosong, supaya landing page tetap bisa dibuka.
+// Error yang ramah baru ditampilkan di form saat user mencoba Sign In / Sign Up.
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
 
 /* ------------------------------------------------------------------ */
 /*  "Remember me"                                                      */
@@ -35,6 +33,6 @@ const authStorage = {
   },
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: { storage: authStorage },
-})
+export const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl, supabaseAnonKey, { auth: { storage: authStorage } })
+  : null

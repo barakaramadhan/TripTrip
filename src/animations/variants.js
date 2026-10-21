@@ -90,3 +90,26 @@ export const formVariants = {
     transition: { duration: 0.25 },
   }),
 };
+
+/* ------------------------------------------------------------------ */
+/*  Landing page                                                       */
+/* ------------------------------------------------------------------ */
+
+// Container yang memunculkan anak-anaknya bergantian
+export const staggerContainer = (stagger = 0.1, delay = 0) => ({
+  hidden: {},
+  visible: { transition: { staggerChildren: stagger, delayChildren: delay } },
+});
+
+// Huruf besar "naik" dari balik garis (dipakai di judul hero)
+export const letterRise = {
+  hidden: { y: "115%", rotate: 4 },
+  visible: { y: "0%", rotate: 0, transition: { duration: 0.5, ease: EASE_OUT } },
+};
+
+export const scaleIn = {
+  hidden: { opacity: 0, scale: 0.94, y: 20 },
+  visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.7, ease: EASE_OUT } },
+};
+
+export const SPRING = { type: "spring", stiffness: 380, damping: 28 };

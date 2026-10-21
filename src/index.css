@@ -10,7 +10,7 @@
   --color-whitebright: #fefefe;
   --color-blackdark: #000000;
   --color-textLabel: #969696;
-  --color-textDesc: #EEEEEE;
+  --color-textDesc: #eeeeee;
 }
 
 @font-face {
@@ -32,4 +32,35 @@
 @theme {
   --font-switzer: "Switzer", sans-serif;
   --font-satoshi: "Satoshi", sans-serif;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-backgroundIvory font-satoshi text-textMoss antialiased;
+    overflow-x: clip; /* cegah scroll horizontal akibat teks raksasa / dekorasi */
+  }
+  img {
+    -webkit-user-drag: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accentSend);
+    outline-offset: 3px;
+  }
+  ::selection {
+    background: var(--color-secondarySage);
+    color: var(--color-textMoss);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

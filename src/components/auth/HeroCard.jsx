@@ -36,7 +36,7 @@ export default function HeroCard({ lines }) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="whitespace-nowrap font-switzer text-[clamp(2rem,4.1vw,4rem)] font-bold uppercase leading-[1.15] tracking-tight text-textMoss"
+            className="whitespace-nowrap font-switzer text-[clamp(1.6rem,3.6vw,4rem)] font-bold uppercase leading-[1.15] tracking-tight text-textMoss"
           >
             {lines.map((line) => (
               // Pembungkus overflow-hidden = "garis" tempat teks muncul dari bawah

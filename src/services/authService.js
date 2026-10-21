@@ -4,13 +4,22 @@
 
 import { supabase, setRememberMe } from '../lib/supabase'
 
+function getClient() {
+  if (!supabase) {
+    throw new Error(
+      'Supabase belum dikonfigurasi. Salin .env.example menjadi .env, isi URL & anon key, lalu restart `npm run dev`.',
+    )
+  }
+  return supabase
+}
+
 /**
  * Daftar akun baru.
  * Data lokasi dikirim sebagai metadata; trigger di database (supabase/schema.sql)
  * otomatis menyalinnya ke tabel `profiles`.
  */
 export async function signUp({ fullName, email, password, address, city, postalCode, country }) {
-  const { data, error } = await supabase.auth.signUp({
+  const { data, error } = await getClient().auth.signUp({
     email: email.trim(),
     password,
     options: {
@@ -32,9 +41,10 @@ export async function signUp({ fullName, email, password, address, city, postalC
 
 /** Masuk dengan email & password. */
 export async function signIn({ email, password, rememberMe }) {
+  const client = getClient()
   setRememberMe(rememberMe) // harus dipanggil SEBELUM login supaya sesi masuk ke storage yang benar
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await client.auth.signInWithPassword({
     email: email.trim(),
     password,
   })
@@ -45,6 +55,6 @@ export async function signIn({ email, password, rememberMe }) {
 
 /** Kirim email reset password. */
 export async function sendPasswordReset(email) {
-  const { error } = await supabase.auth.resetPasswordForEmail(email.trim())
+  const { error } = await getClient().auth.resetPasswordForEmail(email.trim())
   if (error) throw error
 }

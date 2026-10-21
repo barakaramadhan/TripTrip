@@ -2,13 +2,13 @@ import { motion } from "framer-motion";
 
 const sizes = {
   small: {
-    box: "h-[280px]",
+    box: "h-[240px] sm:h-[280px]",
     country: "text-base",
     name: "text-3xl",
     tags: "text-sm",
   },
   featured: {
-    box: "h-[680px] max-md:h-[450px]",
+    box: "h-[420px] sm:h-[480px] lg:h-full",
     country: "text-lg",
     name: "text-5xl max-sm:text-4xl",
     tags: "text-lg",
@@ -23,6 +23,7 @@ function DestinationCard({ item, layoutKey, featured = false, onSelect }) {
       type="button"
       layoutId={`card-${layoutKey}`}
       onClick={() => onSelect(item, layoutKey)}
+      whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
       style={{ borderRadius: 32 }}
       className={`group relative block w-full cursor-pointer overflow-hidden text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accentSend ${size.box}`}
@@ -38,7 +39,7 @@ function DestinationCard({ item, layoutKey, featured = false, onSelect }) {
         />
       </motion.span>
 
-      <span className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent" />
+      <span className="absolute inset-0 bg-linear-to-t from-black/75 via-black/10 to-transparent" />
 
       <span className="absolute inset-x-0 bottom-0 block p-5">
         <span
