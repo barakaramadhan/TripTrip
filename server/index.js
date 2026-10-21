@@ -3,14 +3,29 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import path from "node:path";
+import { existsSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
+const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const distPath = path.join(projectRoot, "dist");
 const GEMINI_API_URL =
   "https://generativelanguage.googleapis.com/v1beta/interactions";
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || "http://localhost:5173" }));
+const allowedOrigins = (process.env.CLIENT_ORIGIN || "http://localhost:5173")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+app.use(cors({
+  origin(origin, callback) {
+    // Requests from tools/health checks may not send an Origin header.
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error("Origin tidak diizinkan oleh CORS."));
+  },
+}));
 app.use(express.json({ limit: "30kb" }));
 
 /* ---------- Bentuk JSON yang diminta dari AI ---------- */
@@ -73,8 +88,14 @@ const itinerarySchema = {
 async function requireUser(req, res, next) {
   const url = process.env.SUPABASE_URL;
   const anon = process.env.SUPABASE_ANON_KEY;
-  if (!url || !anon) return next(); // mode dev tanpa pengecekan
-  const token = (req.headers.authorization || "").replace("Bearer ", "");
+  if (!url || !anon) {
+    // Jangan membiarkan endpoint AI publik tanpa autentikasi di production.
+    if (process.env.NODE_ENV === "production") {
+      return res.status(503).json({ error: "Autentikasi server belum dikonfigurasi." });
+    }
+    return next(); // mode development lokal saja
+  }
+  const token = (req.headers.authorization || "").replace(/^Bearer\s+/i, "");
   if (!token)
     return res
       .status(401)
@@ -94,18 +115,18 @@ async function requireUser(req, res, next) {
   }
 }
 
-// Batas sederhana: 6 permintaan / menit / user
+// Batas sederhana: 6 generasi baru / menit / user. Cache hit tidak memakai kuota ini.
 const hits = new Map();
-function rateLimit(req, res, next) {
+function checkRateLimit(req, res) {
   const key = req.user?.id || req.ip;
   const now = Date.now();
   const recent = (hits.get(key) || []).filter((t) => now - t < 60_000);
-  if (recent.length >= 6)
-    return res
-      .status(429)
-      .json({ error: "Terlalu sering. Tunggu sebentar lalu coba lagi." });
+  if (recent.length >= 6) {
+    res.status(429).json({ error: "Batas permintaan sementara tercapai. Tunggu satu menit lalu coba lagi." });
+    return false;
+  }
   hits.set(key, [...recent, now]);
-  next();
+  return true;
 }
 
 function validate(body) {
@@ -129,7 +150,10 @@ const dayCount = (s, e) =>
     ? Math.min(14, Math.round((new Date(e) - new Date(s)) / 864e5) + 1)
     : 3;
 
-app.get("/api/health", (_req, res) => res.json({ ok: true }));
+app.get("/api/health", (_req, res) => res.json({
+  ok: true,
+  aiConfigured: Boolean(process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY),
+}));
 
 /* ---------- Penyedia AI (urutan dari .env: AI_PROVIDER_ORDER, default groq lalu gemini) ----------
    Groq jauh lebih cepat; Gemini jadi cadangan. Pergantian terjadi diam-diam di server,
@@ -170,7 +194,7 @@ function parseItinerary(text) {
 const providers = {
   groq: {
     key: () => process.env.GROQ_API_KEY,
-    timeout: 30_000,
+    timeout: 15_000,
     async call(prompt, days) {
       const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
@@ -187,21 +211,42 @@ const providers = {
             },
             { role: "user", content: prompt },
           ],
-          response_format: { type: "json_object" },
-          temperature: 0.6,
-          max_tokens: Math.min(MAX_TOKENS, 900 + days * 520),
+          // GPT-OSS 120B mendukung strict JSON Schema. Ini lebih andal daripada
+          // JSON Object Mode yang dapat mengembalikan HTTP 400 saat generasi JSON gagal.
+          response_format: {
+            type: "json_schema",
+            json_schema: {
+              name: "trip_itinerary",
+              strict: true,
+              schema: itinerarySchema,
+            },
+          },
+          reasoning_effort: "low",
+          temperature: 0.2,
+          // Output ringkas mempercepat respons dan mengurangi pemakaian token.
+          max_tokens: Math.min(MAX_TOKENS, 850 + days * 380),
         }),
         signal: AbortSignal.timeout(this.timeout),
       });
       const data = await r.json().catch(() => null);
-      if (!r.ok || !data) throw new Error(`http ${r.status}`);
+      if (!r.ok) {
+        const message = data?.error?.message || data?.message || "";
+        const failedReason = typeof data?.error?.failed_generation === "object"
+          ? data.error.failed_generation?.reason
+          : "";
+        // Log alasan ringkas dari provider untuk diagnosis, tanpa mencetak
+        // attempted output/prompt pengguna ke log server.
+        const detail = failedReason ? ` (reason: ${String(failedReason).slice(0, 180)})` : "";
+        throw new Error(`HTTP ${r.status}${message ? `: ${message}` : ""}${detail}`);
+      }
+      if (!data) throw new Error("Respons Groq bukan JSON yang valid.");
       return data.choices?.[0]?.message?.content || "";
     },
   },
   gemini: {
     key: () => process.env.GEMINI_API_KEY,
-    timeout: 60_000,
-    async call(prompt) {
+    timeout: 25_000,
+    async call(prompt, days) {
       const r = await fetch(GEMINI_API_URL, {
         method: "POST",
         headers: {
@@ -216,11 +261,21 @@ const providers = {
             mime_type: "application/json",
             schema: itinerarySchema,
           },
+          // Itinerary tidak memerlukan penalaran mendalam; level rendah membantu
+          // menghindari timeout tanpa menghilangkan output JSON terstruktur.
+          generation_config: {
+            thinking_level: "low",
+            max_output_tokens: Math.min(MAX_TOKENS, 850 + days * 380),
+          },
         }),
         signal: AbortSignal.timeout(this.timeout),
       });
       const data = await r.json().catch(() => null);
-      if (!r.ok || !data) throw new Error(`http ${r.status}`);
+      if (!r.ok) {
+        const message = data?.error?.message || data?.message || "";
+        throw new Error(`HTTP ${r.status}${message ? `: ${message}` : ""}`);
+      }
+      if (!data) throw new Error("Respons Gemini bukan JSON yang valid.");
       return extractText(data);
     },
   },
@@ -239,7 +294,7 @@ async function generate(prompt, days) {
     try {
       return parseItinerary(await provider.call(prompt, days));
     } catch (e) {
-      console.warn(`[ai] ${name} gagal: ${e.message}`); // hanya di log server
+      console.warn(`[ai] ${name} gagal: ${String(e?.message || e).slice(0, 300)}`); // hanya log server
     }
   }
   return null;
@@ -247,6 +302,8 @@ async function generate(prompt, days) {
 
 /* ---------- Cache: permintaan yang sama tidak memanggil AI lagi ---------- */
 const cache = new Map();
+// Mencegah klik ganda / permintaan identik bersamaan menghabiskan kuota AI.
+const inFlight = new Map();
 const CACHE_TTL = 6 * 3600_000;
 const cacheKey = (b) =>
   JSON.stringify(
@@ -262,18 +319,40 @@ const cacheKey = (b) =>
     ].map((v) => (typeof v === "string" ? v.trim().toLowerCase() : (v ?? ""))),
   );
 
-app.post("/api/itinerary", requireUser, rateLimit, async (req, res) => {
-  if (!order.some((n) => providers[n].key()))
-    return res
-      .status(500)
-      .json({ error: "Layanan AI belum dikonfigurasi di server." });
+app.post("/api/itinerary", requireUser, async (req, res) => {
+  if (!order.some((n) => providers[n].key())) {
+    return res.status(503).json({
+      error: "Layanan AI belum dikonfigurasi. Tambahkan kunci API AI di environment server.",
+    });
+  }
+
   const problem = validate(req.body);
   if (problem) return res.status(400).json({ error: problem });
 
   const key = cacheKey(req.body);
   const hit = cache.get(key);
-  if (hit && Date.now() - hit.at < CACHE_TTL)
+  if (hit && Date.now() - hit.at < CACHE_TTL) {
     return res.json({ itinerary: hit.itinerary });
+  }
+  if (hit) cache.delete(key);
+
+  // Jika permintaan yang sama sedang berjalan, tunggu hasil itu alih-alih memanggil AI lagi.
+  const pending = inFlight.get(key);
+  if (pending) {
+    try {
+      const sharedItinerary = await pending;
+      if (!sharedItinerary) {
+        return res.status(503).json({
+          error: "Semua layanan AI sedang sibuk atau mencapai batas pemakaian. Coba lagi beberapa saat lagi.",
+        });
+      }
+      return res.json({ itinerary: sharedItinerary });
+    } catch {
+      return res.status(503).json({ error: "AI sedang sibuk. Coba lagi sebentar lagi." });
+    }
+  }
+
+  if (!checkRateLimit(req, res)) return;
 
   const {
     destination,
@@ -294,18 +373,40 @@ Traveler: ${travelers} orang | Transportasi: ${String(transport).slice(0, 30)} |
 Minat: ${String(interests).slice(0, 200) || "umum"}
 Aturan: semua biaya rupiah bilangan bulat untuk seluruh rombongan; jangan mengarang harga/jam buka sebagai fakta (tandai sebagai estimasi);
 ingatkan cek visa, dokumen, dan jadwal resmi; usahakan total biaya tidak melebihi budget.
-Ringkas: maksimal 4 kegiatan per hari, deskripsi 1 kalimat pendek, notes singkat, important_notes maksimal 3 butir. Kembalikan hanya JSON.`;
+Ringkas: maksimal 3 kegiatan per hari, deskripsi pendek, notes singkat, important_notes maksimal 3 butir. Kembalikan hanya JSON valid sesuai skema.`;
 
-  const itinerary = await generate(prompt, days);
-  if (!itinerary)
-    return res
-      .status(502)
-      .json({ error: "AI sedang sibuk. Coba lagi sebentar lagi." });
+  const generation = generate(prompt, days);
+  inFlight.set(key, generation);
+  try {
+    const itinerary = await generation;
+    if (!itinerary) {
+      return res.status(503).json({
+        error: "Semua layanan AI sedang sibuk atau mencapai batas pemakaian. Coba lagi beberapa saat lagi.",
+      });
+    }
 
-  if (cache.size >= 200) cache.delete(cache.keys().next().value);
-  cache.set(key, { itinerary, at: Date.now() });
-  res.json({ itinerary });
+    if (cache.size >= 200) cache.delete(cache.keys().next().value);
+    cache.set(key, { itinerary, at: Date.now() });
+    return res.json({ itinerary });
+  } catch (error) {
+    console.error("[ai] Gagal membuat itinerary:", String(error?.message || error).slice(0, 300));
+    return res.status(503).json({ error: "AI sedang sibuk. Coba lagi sebentar lagi." });
+  } finally {
+    if (inFlight.get(key) === generation) inFlight.delete(key);
+  }
 });
+
+// Jika hasil build tersedia, server Node juga bisa menyajikan frontend.
+// Ini memungkinkan frontend dan API hidup pada satu domain di production.
+if (existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.use((req, res, next) => {
+    if (req.method !== "GET" || req.path.startsWith("/api/")) return next();
+    return res.sendFile(path.join(distPath, "index.html"), (error) => {
+      if (error) next(error);
+    });
+  });
+}
 
 app.listen(PORT, () =>
   console.log(
