@@ -10,23 +10,18 @@ import ImageReady from "../assets/images/ReadyForAn.webp";
 
 export default function ReadyForAdventure() {
   const sectionRef = useRef(null);
-  const reduceMotion = useReducedMotion(); // hormati pengguna yang mematikan animasi
+  const reduceMotion = useReducedMotion();
 
-  // scrollYProgress: 0 = section baru muncul dari bawah layar, 1 = section sudah pas di layar.
-  // Di angka 1 semua posisi kembali normal (sama seperti desain awal).
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end end"],
   });
 
-  // Kota: bergerak lebih lambat dari scroll + zoom out pelan => terasa jauh
   const cityY = useTransform(scrollYProgress, [0, 1], ["-14%", "0%"]);
   const cityScale = useTransform(scrollYProgress, [0, 1], [1.12, 1]);
 
-  // Tulisan: mulai agak turun (tersembunyi di belakang gedung), lalu naik muncul
   const textY = useTransform(scrollYProgress, [0, 1], ["45%", "0%"]);
 
-  // Tulisan outline di belakang: bergerak sedikit beda supaya ada kesan berlapis
   const outlineY = useTransform(scrollYProgress, [0, 1], ["18%", "0%"]);
 
   return (
@@ -51,7 +46,7 @@ export default function ReadyForAdventure() {
           <div className="relative -mt-10 max-md:-mt-3">
             <motion.h2
               style={reduceMotion ? undefined : { y: outlineY }}
-              className="-top-4 max-md:-top-2 left-2 max-md:left-1 absolute font-bold [-webkit-text-stroke:1.5px_var(--color-textMoss)] text-[200px] text-secondarySage/40 max-md:[-webkit-text-stroke:1px_var(--color-textMoss)] max-md:text-[13vw] whitespace-nowrap">
+              className="-top-4 max-md:-top-2 left-2 max-md:left-1 absolute font-bold [paint-order:stroke_fill] [-webkit-text-stroke:3px_var(--color-textMoss)] text-[200px] text-[color-mix(in_srgb,var(--color-secondarySage)_40%,var(--color-backgroundIvory))] max-md:[-webkit-text-stroke:2px_var(--color-textMoss)] max-md:text-[13vw] whitespace-nowrap">
               ADVENTURE <span className="font-switzer">?</span>
             </motion.h2>
 
@@ -61,7 +56,7 @@ export default function ReadyForAdventure() {
           </div>
         </motion.div>
 
-        <Button className="z-30 self-center p-3 w-40">Start Planning</Button>
+        <Button className="z-30 self-center mt-auto mb-10 p-3 w-40">Start Planning</Button>
       </section>
     </>
   );

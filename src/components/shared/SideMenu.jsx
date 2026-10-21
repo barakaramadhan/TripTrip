@@ -85,9 +85,6 @@ function SideMenu({ open, onClose, isLoggedIn = false }) {
             </Button>
           ) : (
             <>
-              <Button to="/signin" variant="secondary" className="w-full">
-                Sign In
-              </Button>
               <Button to="/signup" variant="primary" className="w-full">
                 Sign Up
               </Button>

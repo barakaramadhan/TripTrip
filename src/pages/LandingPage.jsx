@@ -6,6 +6,7 @@ import Destinations from "./Destinations";
 import AiPlanned from "./AiPlanned";
 import TravelSmart from "./TravelSmart";
 import ReadyForAdventure from "./ReadyForAdventure";
+import Footer from "../components/shared/Footer";
 
 // Semua section landing page digabung di sini, urut dari atas ke bawah.
 export default function LandingPage() {
@@ -21,9 +22,10 @@ export default function LandingPage() {
         <TravelSmart />
         <ReadyForAdventure />
       </main>
-      <footer className="bg-backgroundIvory px-5 py-8 text-center font-satoshi text-sm text-textMoss/70 sm:px-10">
+      <Footer />
+      {/* <footer className="bg-backgroundIvory px-5 py-8 text-center font-satoshi text-sm text-textMoss/70 sm:px-10">
         © {new Date().getFullYear()} TripTrip.com — plan smarter, travel lighter.
-      </footer>
+      </footer> */}
     </>
   );
 }

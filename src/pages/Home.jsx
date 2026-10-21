@@ -28,7 +28,8 @@ function Home() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex flex-col bg-backgroundIvory min-h-screen max-md:min-h-[640px] overflow-hidden">
+      className="relative flex flex-col bg-backgroundIvory min-h-screen max-md:min-h-[640px] overflow-hidden mt-10"
+    >
       <div className="top-0 z-30 absolute inset-x-0"></div>
 
       <motion.img
@@ -42,15 +43,17 @@ function Home() {
 
       <motion.div
         style={reduceMotion ? undefined : { y: textY }}
-        className="relative flex flex-col flex-[0.5] justify-center max-md:justify-start px-20 max-sm:px-4 max-md:px-6 pt-5 max-md:pt-28 pb-40 max-md:pb-0">
+        className="relative flex flex-col flex-[0.5] justify-center max-md:justify-start px-20 max-sm:px-4 max-md:px-6 pt-5 max-md:pt-28 pb-40 max-md:pb-0"
+      >
         <h1 className="font-switzer font-semibold text-textMoss max-sm:text-2xl text-4xl">
           TripTrip!!, Let's
         </h1>
 
         <div className="z-10 relative -mt-14 max-md:-mt-4">
-          <h2 className="-top-5 max-md:-top-2 left-4 max-md:left-2 absolute font-bold [-webkit-text-stroke:1.5px_var(--color-textMoss)] text-[208px] text-secondarySage/40 max-md:[-webkit-text-stroke:1px_var(--color-textMoss)] max-md:text-[13vw] whitespace-nowrap">
-            ADVENTURE <span className="font-switzer">.</span>
+          <h2 className="absolute -top-5 left-4 max-md:-top-2 max-md:left-2 font-bold font-switzer [paint-order:stroke_fill] [-webkit-text-stroke:2px_var(--color-textMoss)] text-[color-mix(in_srgb,var(--color-secondarySage)_40%,var(--color-backgroundIvory))] text-[208px] max-md:[-webkit-text-stroke:1.4px_var(--color-textMoss)] max-md:text-[13vw] whitespace-nowrap tracking-wide">
+            ADVENTURE.
           </h2>
+
           <h2 className="relative font-switzer font-bold text-[208px] text-textMoss max-md:text-[13vw] tracking-wide">
             ADVENTURE.
           </h2>

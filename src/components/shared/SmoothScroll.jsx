@@ -9,7 +9,7 @@ function SmoothScroll() {
 
     const lenis = new Lenis({
       autoRaf: true,
-      duration: 1.2,
+      duration: 2.0,
       anchors: true, // klik link #section ikut meluncur halus
     });
 
