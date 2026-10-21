@@ -47,7 +47,7 @@ function Sidebar({ open, onClose }) {
                 onClick={() => setActiveTab(item.name)}
                 className={`relative flex items-center justify-between p-4 pr-10 rounded-2xl transition-colors cursor-pointer ${
                   isActive
-                    ? "bg-secondarySage/40 text-primaryForest font-semibold"
+                    ? "bg-secondarySage/40 text-primaryForest font-semibold border-none"
                     : "text-textMoss hover:bg-gray-50 font-normal"
                 }`}
               >
