@@ -33,7 +33,7 @@ export default function SignIn() {
 
     try {
       await signIn(values);
-      navigate("/"); // berhasil -> ke halaman utama
+      navigate("/dashboard"); // berhasil -> ke dashboard
     } catch (error) {
       setAlert({ type: "error", message: error.message });
       setIsLoading(false);
