@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Link, useLocation, useOutlet } from "react-router-dom";
+import { Link, useLocation, useOutlet } from "react-router";
 import HeroPanel from "./HeroPanel";
 import { HERO_BY_PATH } from "../../constants/authContent";
 
@@ -23,8 +23,8 @@ export default function AuthLayout() {
       <section className="z-20 relative flex justify-center items-center bg-white px-6 pt-20 pb-10 w-full lg:w-1/2">
         <Link
           to="/"
-          className="top-6 left-6 absolute flex items-center gap-2 font-switzer font-bold hover:opacity-70 transition-opacity">
-          <i className="inline-flex fi fi-rr-angle-small-left" />
+          className="top-6 left-6 absolute flex items-center gap-2 hover:opacity-70 font-switzer font-bold transition-opacity">
+          <i className="inline-flex fi-rr-angle-small-left fi" />
           TripTrip.com
         </Link>
 
