@@ -5,8 +5,6 @@ const menuItems = [
   { name: "Home", iconClass: "fi fi-rr-house-blank" },
   { name: "Destination", iconClass: "fi fi-rr-marker" },
   { name: "Plan a Trip", iconClass: "fi fi-rr-route" },
-  { name: "About", iconClass: "fi fi-rr-info" },
-  { name: "Contact", iconClass: "fi fi-rr-headset" },
 ];
 
 function Sidebar({ open, onClose }) {
