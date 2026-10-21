@@ -6,13 +6,20 @@ import DestinationModal from "../components/destinations/DestinationModal";
 import Reveal from "../components/shared/Reveal";
 
 const PIN_TOP = 48; // jarak konten dari atas layar saat menempel (px)
-const featured = destinations[0];
-const others = destinations.slice(1); // card besar tidak diulang di grid kecil
 
 // Tinggi area card di desktop: menyesuaikan tinggi layar supaya tidak terpotong
 const AREA_HEIGHT = "lg:h-[clamp(30rem,calc(100svh-14rem),42.5rem)]";
 
 function Destinations() {
+  // Card besar dipilih acak sekali tiap halaman dimuat / di-refresh.
+  // Card besar tidak diulang di grid kecil.
+  const [{ featured, others }] = useState(() => {
+    const i = Math.floor(Math.random() * destinations.length);
+    return {
+      featured: destinations[i],
+      others: destinations.filter((_, idx) => idx !== i),
+    };
+  });
   const [selected, setSelected] = useState(null); // { item, layoutKey }
   const [travel, setTravel] = useState(0); // jarak card kecil bergeser (px)
   const y = useMotionValue(0);
