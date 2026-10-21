@@ -3,11 +3,13 @@ import Button from "../components/ui/Button";
 import Input from "../components/ui/Input";
 import LeafCorner from "../components/shared/LeafCorner";
 import Reveal from "../components/shared/Reveal";
+import { useSession } from "../hooks/useSession";
 
 const STYLES = ["Relaxation", "Adventure", "Culture", "Food & Dining"];
 
 function StarPlanning() {
   const [selected, setSelected] = useState(["Relaxation"]);
+  const { user } = useSession(); // sudah login -> langsung ke halaman Plan di dashboard
 
   const toggle = (style) =>
     setSelected((current) =>
@@ -68,7 +70,7 @@ function StarPlanning() {
                 </div>
               </div>
 
-              <Button to="/signup" className="z-10 w-full py-3 text-lg font-bold sm:w-auto sm:px-8">
+              <Button to={user ? "/dashboard/plan" : "/signup"} className="z-10 w-full py-3 text-lg font-bold sm:w-auto sm:px-8">
                 Generate My Trip
               </Button>
             </div>

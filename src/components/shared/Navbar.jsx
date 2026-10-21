@@ -1,112 +1,76 @@
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import Button from "../ui/Button";
 import SideMenu from "./SideMenu";
-import { EASE_OUT } from "../../animations/variants";
+import { useSession } from "../../hooks/useSession";
 
-const LINKS = [
-  { href: "#planner", label: "Plan" },
-  { href: "#destinations", label: "Destinations" },
-  { href: "#how", label: "How it works" },
-  { href: "#features", label: "Features" },
-];
-
-// Navbar menempel di atas. Transparan di puncak halaman, lalu berubah jadi
-// kaca buram begitu di-scroll. Di layar kecil, menu dibuka lewat tombol hamburger.
+// Navbar menempel di atas. Di paling atas halaman ia transparan; begitu di-scroll
+// berubah jadi "kaca" (blur + tembus pandang) dan sedikit mengecil.
 function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [hiddenForDestinations, setHiddenForDestinations] = useState(false);
-  const headerRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  // Langsung benar walau halaman di-refresh di tengah (sudah ter-scroll)
+  const [scrolled, setScrolled] = useState(() => window.scrollY > 24);
+  const { user } = useSession();
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 24);
-      const section = document.getElementById("destinations");
-      const headerHeight =
-        headerRef.current?.getBoundingClientRect().height ?? 0;
-      const bounds = section?.getBoundingClientRect();
-      const shouldHide = Boolean(
-        bounds && bounds.top <= headerHeight && bounds.bottom > headerHeight,
-      );
-
-      setHiddenForDestinations(shouldHide);
-    };
-
-    onScroll();
+    const onScroll = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const close = () => setOpen(false);
-
   return (
-    <>
-      <motion.header
-        ref={headerRef}
-        aria-hidden={hiddenForDestinations}
-        inert={hiddenForDestinations}
-        initial={{ y: -80, opacity: 0 }}
-        animate={{
-          y: hiddenForDestinations ? "-100%" : 0,
-          opacity: hiddenForDestinations ? 0 : 1,
-        }}
-        transition={{
-          duration: hiddenForDestinations ? 0.18 : 0.25,
-          ease: EASE_OUT,
-        }}
-        className={`fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300 ${
-          hiddenForDestinations ? "pointer-events-none" : ""
-        } ${
-          scrolled || open
-            ? "bg-backgroundIvory/85 shadow-sm backdrop-blur-md"
-            : "bg-transparent"
-        }`}>
-        <nav className="flex justify-between items-center mx-auto px-5 sm:px-10 lg:px-20 py-3 lg:py-4 max-w-[100rem]">
-          <Link
-            to="/"
-            onClick={close}
-            className="font-switzer font-bold text-lg sm:text-xl">
-            TripTrip.com
-          </Link>
+    // z-[45]: di atas kartu landing (z-40), di bawah modal destinasi (z-50).
+    // Efek blur sengaja ada di lapisan anak (bukan di <nav>) supaya menu samping
+    // yang `fixed` tetap menempel ke layar, bukan ke navbar.
+    <nav
+      className={`sticky top-0 z-[45] flex justify-between items-center px-20 max-sm:px-4 max-md:px-6 transition-[padding] duration-500 ${
+        scrolled ? "py-2.5" : "py-4"
+      }`}>
+      <div
+        aria-hidden="true"
+        className={`-z-10 absolute inset-0 bg-backgroundIvory/55 backdrop-blur-xl backdrop-saturate-150 border-b border-white/60 shadow-[0_10px_30px_-12px_rgba(36,75,58,0.18),inset_0_1px_0_rgba(255,255,255,0.7)] transition-opacity duration-500 ${
+          scrolled ? "opacity-100" : "opacity-0"
+        }`}
+      />
 
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex items-center gap-2">
-              <Button to="/signin" variant="secondary">
+      <h1 className="font-switzer font-bold">
+        {/* #top: klik = meluncur halus ke atas (ditangani Lenis) */}
+        <a href="#top" className="hover:opacity-70 transition-opacity">
+          TripTrip.com
+        </a>
+      </h1>
+
+      <div className="flex items-center gap-5 max-sm:gap-3">
+        <div className="flex items-center gap-2">
+          {user ? (
+            <Button to="/dashboard" variant="primary" className="px-4 py-2 max-sm:text-sm">
+              My Dashboard
+            </Button>
+          ) : (
+            <>
+              <Button to="/signin" variant="secondary" className="max-sm:hidden">
                 Sign In
               </Button>
-              <Button to="/signup">Get Started!!</Button>
-            </div>
+              <Button to="/signup" variant="primary" className="px-4 py-2 max-sm:text-sm">
+                Get Started!!
+              </Button>
+            </>
+          )}
+        </div>
 
-            <button
-              type="button"
-              aria-label={open ? "Close menu" : "Open menu"}
-              aria-expanded={open}
-              onClick={() => setOpen((value) => !value)}
-              className={`flex size-10 cursor-pointer items-center justify-center rounded-full text-2xl text-textMoss transition-colors hover:bg-secondarySage/40`}>
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.i
-                  key={open ? "close" : "open"}
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.18 }}
-                  className={`fi ${open ? "fi-rr-cross-small" : "fi-br-bars-sort"} inline-flex`}
-                />
-              </AnimatePresence>
-            </button>
-          </div>
-        </nav>
-      </motion.header>
+        <button
+          type="button"
+          aria-label="Buka menu"
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen(true)}
+          className="flex justify-center items-center text-textMoss text-2xl cursor-pointer">
+          <i className="fi fi-br-bars-sort"></i>
+        </button>
+      </div>
 
-      {/* Menu samping: dibuka lewat tombol hamburger */}
-      <AnimatePresence>{open && <SideMenu onClose={close} />}</AnimatePresence>
-    </>
+      {/* Selalu di-render agar animasi translate CSS dapat berjalan */}
+      <SideMenu open={isOpen} onClose={() => setIsOpen(false)} isLoggedIn={Boolean(user)} />
+    </nav>
   );
 }
 
