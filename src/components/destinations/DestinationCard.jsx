@@ -10,7 +10,7 @@ const sizes = {
   featured: {
     box: "h-[420px] sm:h-[480px] lg:h-full",
     country: "text-lg",
-    name: "text-5xl max-sm:text-4xl",
+    name: "text-3xl max-sm:text-4xl",
     tags: "text-lg",
   },
 };

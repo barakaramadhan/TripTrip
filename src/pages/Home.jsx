@@ -28,7 +28,7 @@ function Home() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex flex-col bg-backgroundIvory min-h-screen max-md:min-h-[640px] overflow-hidden mt-10"
+      className="relative flex flex-col bg-backgroundIvory min-h-[640px] md:min-h-screen overflow-hidden mt-10"
     >
       <div className="top-0 z-30 absolute inset-x-0"></div>
 
@@ -38,23 +38,23 @@ function Home() {
         style={
           reduceMotion ? undefined : { y: mountainY, scale: mountainScale }
         }
-        className="z-20 absolute inset-0 rounded-b-2xl w-full h-full object-contain max-md:object-[70%_bottom] max-md:object-cover origin-bottom will-change-transform"
+        className="z-20 absolute inset-0 rounded-b-2xl w-full h-full object-cover object-[70%_bottom] md:object-contain md:object-center origin-bottom will-change-transform"
       />
 
       <motion.div
         style={reduceMotion ? undefined : { y: textY }}
-        className="relative flex flex-col flex-[0.5] justify-center max-md:justify-start px-20 max-sm:px-4 max-md:px-6 pt-5 max-md:pt-28 pb-40 max-md:pb-0"
+        className="relative flex flex-col flex-[0.5] justify-start md:justify-center px-4 sm:px-6 md:px-20 pt-28 md:pt-5 pb-0 md:pb-40"
       >
-        <h1 className="font-switzer font-semibold text-textMoss max-sm:text-2xl text-4xl">
+        <h1 className="font-switzer font-semibold text-textMoss text-2xl sm:text-4xl">
           TripTrip!!, Let's
         </h1>
 
-        <div className="z-10 relative -mt-14 max-md:-mt-4">
-          <h2 className="absolute -top-5 left-4 max-md:-top-2 max-md:left-2 font-bold font-switzer [paint-order:stroke_fill] [-webkit-text-stroke:2px_var(--color-textMoss)] text-[color-mix(in_srgb,var(--color-secondarySage)_40%,var(--color-backgroundIvory))] text-[208px] max-md:[-webkit-text-stroke:1.4px_var(--color-textMoss)] max-md:text-[13vw] whitespace-nowrap tracking-wide">
+        <div className="z-10 relative md:-mt-14 xl:-mt-10">
+          <h2 className="absolute -top-2 left-2 md:-top-5 md:left-4 font-bold font-switzer [paint-order:stroke_fill] [-webkit-text-stroke:1.4px_var(--color-textMoss)] md:[-webkit-text-stroke:2px_var(--color-textMoss)] text-[color-mix(in_srgb,var(--color-secondarySage)_40%,var(--color-backgroundIvory))] text-[13vw] md:text-[14vw] min-[1440px]:text-[208px] whitespace-nowrap tracking-wide">
             ADVENTURE.
           </h2>
 
-          <h2 className="relative font-switzer font-bold text-[208px] text-textMoss max-md:text-[13vw] tracking-wide">
+          <h2 className="relative font-switzer font-bold text-[13vw] md:text-[14vw] min-[1440px]:text-[208px] text-textMoss tracking-wide">
             ADVENTURE.
           </h2>
         </div>
