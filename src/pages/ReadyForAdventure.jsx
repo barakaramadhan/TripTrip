@@ -33,7 +33,7 @@ export default function ReadyForAdventure() {
           src={ImageReady}
           alt=""
           style={reduceMotion ? undefined : { y: cityY, scale: cityScale }}
-          className="z-20 absolute inset-0 -mt-28 max-md:mt-0 w-full max-md:h-full object-contain max-md:object-bottom origin-bottom will-change-transform"
+          className="z-20 absolute inset-0 -mt-28 max-md:mt-0 w-full h-[calc(100%+7rem)] max-md:h-full object-contain object-bottom max-md:object-bottom origin-bottom will-change-transform"
         />
 
         <motion.div
@@ -56,7 +56,7 @@ export default function ReadyForAdventure() {
           </div>
         </motion.div>
 
-        <Button className="z-30 self-center mt-auto mb-10 p-3 w-40">Start Planning</Button>
+        <Button className="z-30 self-center mt-40 p-3 w-40">Start Planning</Button>
       </section>
     </>
   );

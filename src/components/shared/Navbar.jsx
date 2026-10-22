@@ -46,7 +46,7 @@ function Navbar() {
               clip-rule="evenodd"
               fill="#64816D"
             />
-          </svg>
+          </svg>  
         </a>
       </h1>
 
