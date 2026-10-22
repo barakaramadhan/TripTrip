@@ -38,7 +38,7 @@ function Home() {
         style={
           reduceMotion ? undefined : { y: mountainY, scale: mountainScale }
         }
-        className="z-20 absolute inset-0 rounded-b-2xl w-full h-full object-cover object-[70%_bottom] md:object-contain md:object-center origin-bottom will-change-transform"
+        className="z-20 absolute inset-0 rounded-b-2xl w-full h-full object-cover object-[70%_bottom] md:object-cover md:object-center origin-bottom will-change-transform"
       />
 
       <motion.div
