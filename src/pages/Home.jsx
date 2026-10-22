@@ -28,7 +28,7 @@ function Home() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex flex-col bg-backgroundIvory min-h-[640px] md:min-h-screen overflow-hidden mt-10"
+      className="relative flex flex-col bg-backgroundIvory min-h-[640px] md:min-h-screen overflow-hidden mt-10 xl:mt-20"
     >
       <div className="top-0 z-30 absolute inset-x-0"></div>
 
