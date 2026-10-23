@@ -17,9 +17,9 @@ function Navbar() {
 
   return (
     <nav
-      className={`fixed z-[45] transition-all duration-300 flex justify-between items-center max-md:px-6 max-sm:px-4 ${
+      className={`fixed z-[45] transition-all duration-300 flex justify-between items-center max-md:px-6 max-sm:px-3 max-sm:pt-8 max-sm:-mt-3 ${
         isScrolled
-          ? "top-0 left-20 right-20 bg-whitebright rounded-b-[50px] shadow-lg px-10 pb-6 pt-5 max-md:left-4 max-md:right-4"
+          ? "top-0 left-20 right-20 bg-whitebright rounded-b-[50px] shadow-lg px-10 pb-6 pt-5 max-md:left-4 max-md:right-4 max-sm:left-2 max-sm:right-2 max-sm:rounded-b-3xl"
           : "top-0 left-0 right-0 bg-transparent px-20 py-5"
       }`}
     >

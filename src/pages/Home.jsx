@@ -43,18 +43,18 @@ function Home() {
 
       <motion.div
         style={reduceMotion ? undefined : { y: textY }}
-        className="relative flex flex-col flex-[0.5] justify-start md:justify-center px-4 sm:px-6 md:px-20 pt-28 md:pt-5 pb-0 md:pb-40"
+        className="relative flex flex-col flex-[0.5] justify-start md:justify-center px-3 sm:px-6 md:px-20 pt-28 md:pt-5 pb-0 md:pb-40"
       >
         <h1 className="font-switzer font-semibold text-textMoss text-2xl sm:text-4xl">
           TripTrip!!, Let's
         </h1>
 
         <div className="z-10 relative md:-mt-14 xl:-mt-10">
-          <h2 className="absolute -top-2 left-2 md:-top-5 md:left-4 font-bold font-switzer [paint-order:stroke_fill] [-webkit-text-stroke:1.4px_var(--color-textMoss)] md:[-webkit-text-stroke:2px_var(--color-textMoss)] text-[color-mix(in_srgb,var(--color-secondarySage)_40%,var(--color-backgroundIvory))] text-[13vw] md:text-[14vw] min-[1440px]:text-[208px] whitespace-nowrap tracking-wide">
+          <h2 className="absolute -top-2 left-2 md:-top-5 md:left-4 font-bold font-switzer [paint-order:stroke_fill] [-webkit-text-stroke:1.4px_var(--color-textMoss)] md:[-webkit-text-stroke:2px_var(--color-textMoss)] text-[color-mix(in_srgb,var(--color-secondarySage)_40%,var(--color-backgroundIvory))] text-[15vw] md:text-[14vw] min-[1440px]:text-[208px] whitespace-nowrap tracking-wide">
             ADVENTURE.
           </h2>
 
-          <h2 className="relative font-switzer font-bold text-[13vw] md:text-[14vw] min-[1440px]:text-[208px] text-textMoss tracking-wide">
+          <h2 className="relative font-switzer font-bold text-[15vw] md:text-[14vw] min-[1440px]:text-[208px] text-textMoss tracking-wide">
             ADVENTURE.
           </h2>
         </div>
