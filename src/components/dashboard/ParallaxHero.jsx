@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import {
   motion,
   useMotionValue,
@@ -20,140 +20,6 @@ function seededRandom(seed) {
   };
 }
 
-function makeBuildings(seed, minH, maxH, width = 1600) {
-  const rnd = seededRandom(seed);
-  const list = [];
-
-  for (let x = 0; x < width; ) {
-    const w = 28 + rnd() * 52;
-
-    list.push({
-      x,
-      w,
-      h: minH + rnd() * (maxH - minH),
-      antenna: rnd() > 0.8,
-      crown: rnd() > 0.7,
-    });
-
-    x += w + rnd() * 5;
-  }
-
-  return list;
-}
-
-function Skyline({ id, seed, minH, maxH, color, windows = false, glow = [] }) {
-  const buildings = useMemo(
-    () => makeBuildings(seed, minH, maxH),
-    [seed, minH, maxH],
-  );
-
-  const blinking = useMemo(() => {
-    const rnd = seededRandom(seed + 7);
-
-    return buildings
-      .filter(() => rnd() > 0.72)
-      .map((b, i) => ({
-        x: b.x + 6 + rnd() * (b.w - 14),
-        y: 300 - b.h + 12 + rnd() * (b.h - 30),
-        d: (i % 6) * 0.7,
-      }));
-  }, [buildings, seed]);
-
-  return (
-    <svg
-      viewBox="0 0 1600 300"
-      preserveAspectRatio="xMidYMax slice"
-      className="size-full"
-      aria-hidden="true">
-      {windows && (
-        <defs>
-          <pattern id={id} width="9" height="12" patternUnits="userSpaceOnUse">
-            <rect
-              x="2.5"
-              y="3"
-              width="3"
-              height="4.5"
-              rx=".6"
-              fill="#f6c98d"
-              opacity=".55"
-            />
-          </pattern>
-        </defs>
-      )}
-
-      <g fill={color}>
-        {buildings.map((b, i) => (
-          <g key={i}>
-            <rect x={b.x} y={300 - b.h} width={b.w} height={b.h + 2} />
-
-            {b.crown && (
-              <rect
-                x={b.x + b.w * 0.2}
-                y={300 - b.h - 10}
-                width={b.w * 0.6}
-                height="11"
-              />
-            )}
-
-            {b.antenna && (
-              <rect
-                x={b.x + b.w / 2 - 0.8}
-                y={300 - b.h - 30}
-                width="1.6"
-                height="30"
-              />
-            )}
-          </g>
-        ))}
-      </g>
-
-      {windows && (
-        <>
-          <g fill={`url(#${id})`}>
-            {buildings.map((b, i) => (
-              <rect
-                key={i}
-                x={b.x + 3}
-                y={300 - b.h + 6}
-                width={Math.max(b.w - 6, 0)}
-                height={b.h - 8}
-              />
-            ))}
-          </g>
-
-          {blinking.map((w, i) => (
-            <rect
-              key={i}
-              x={w.x}
-              y={w.y}
-              width="3.4"
-              height="5"
-              rx=".6"
-              fill="#ffe2b0"
-              className="animate-pulse"
-              style={{
-                animationDelay: `${w.d}s`,
-                animationDuration: "3.2s",
-              }}
-            />
-          ))}
-        </>
-      )}
-
-      {glow.length > 0 && (
-        <rect
-          x="0"
-          y="262"
-          width="1600"
-          height="38"
-          fill={glow[0]}
-          opacity={glow[1]}
-        />
-      )}
-    </svg>
-  );
-}
-
 function Layer({ depth, mx, my, progress, reduce, className = "", children }) {
   const x = useTransform(mx, [-0.5, 0.5], [depth * -34, depth * 34]);
 
@@ -166,7 +32,8 @@ function Layer({ depth, mx, my, progress, reduce, className = "", children }) {
   return (
     <motion.div
       style={reduce ? undefined : { x, y }}
-      className={`pointer-events-none absolute inset-x-[-6%] inset-y-[-4%] ${className}`}>
+      className={`pointer-events-none absolute inset-x-[-6%] inset-y-[-4%] ${className}`}
+    >
       {children}
     </motion.div>
   );
@@ -248,7 +115,8 @@ export default function ParallaxHero({ badge, title, subtitle, children }) {
       initial={{ opacity: 0, y: 24, scale: 0.985 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.9, ease: EASE_OUT }}
-      className="isolate relative bg-primaryForest rounded-[2rem] h-[26rem] sm:h-[30rem] lg:h-[34rem] overflow-hidden">
+      className="isolate relative bg-primaryForest rounded-[2rem] h-[26rem] sm:h-[30rem] lg:h-[34rem] overflow-hidden"
+    >
       <div
         className="absolute inset-0"
         style={{
@@ -276,29 +144,6 @@ export default function ParallaxHero({ badge, title, subtitle, children }) {
           }}
         />
       ))}
-
-      <Layer depth={0.1} {...shared}>
-        <motion.div
-          animate={
-            reduce
-              ? undefined
-              : {
-                  scale: [1, 1.08, 1],
-                  opacity: [0.85, 1, 0.85],
-                }
-          }
-          transition={{
-            duration: 7,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="top-[34%] right-[22%] absolute rounded-full size-56 sm:size-72"
-          style={{
-            background:
-              "radial-gradient(circle,#ffe3b3 0%,#f4b97a 38%,rgba(244,185,122,0) 70%)",
-          }}
-        />
-      </Layer>
 
       <Layer depth={0.2} {...shared}>
         {[
@@ -342,45 +187,17 @@ export default function ParallaxHero({ badge, title, subtitle, children }) {
           src={MountainArt}
           alt=""
           fetchPriority="high"
-          className="bottom-[10%] absolute inset-x-0 w-full h-[88%] object-[70%_bottom] object-cover"
+          className="-bottom-[8%] absolute inset-x-0 w-full h-[88%] object-[70%_bottom] object-cover"
         />
       </Layer>
 
-      <Layer depth={0.7} {...shared}>
-        <div className="bottom-[4%] absolute inset-x-0 opacity-80 h-[34%]">
-          <Skyline
-            id="win-far"
-            seed={42}
-            minH={70}
-            maxH={170}
-            color="#5f8a73"
-            glow={["#efcf9f", 0.35]}
-          />
-        </div>
-      </Layer>
-
-      <Layer depth={1.1} {...shared}>
-        <div className="-bottom-[2%] absolute inset-x-0 h-[30%]">
-          <Skyline
-            id="win-near"
-            seed={7}
-            minH={60}
-            maxH={150}
-            color="#132a21"
-            windows
-          />
-        </div>
-      </Layer>
-
-      <Layer depth={1.5} {...shared}>
-        <div className="bottom-0 absolute inset-x-0 bg-gradient-to-t from-[#0d1f18] to-transparent h-[14%]" />
-      </Layer>
-
-      <div className="absolute inset-0 bg-gradient-to-r from-[#10261d]/85 via-[#10261d]/30 to-transparent pointer-events-none" />
+      {/* Bayangan gelap hanya di sisi kiri (area teks), memudar ke kanan */}
+      <div className="top-0 bottom-0 left-0 absolute bg-gradient-to-r from-[#10261d]/85 via-[#10261d]/40 to-transparent w-1/2 max-md:w-3/5 max-sm:w-full pointer-events-none" />
 
       <motion.div
         style={reduce ? undefined : { y: textY }}
-        className="z-10 relative flex flex-col justify-center gap-4 p-6 sm:p-10 max-w-xl h-full">
+        className="z-10 relative flex flex-col justify-center gap-4 p-6 sm:p-10 max-w-xl h-full"
+      >
         {badge && (
           <motion.span
             initial={{ opacity: 0, x: -16 }}
@@ -390,7 +207,8 @@ export default function ParallaxHero({ badge, title, subtitle, children }) {
               duration: 0.6,
               ease: EASE_OUT,
             }}
-            className="self-start bg-secondarySage px-3 py-1 rounded-full font-satoshi text-primaryForest text-sm">
+            className="self-start bg-secondarySage px-3 py-1 rounded-full font-satoshi text-primaryForest text-sm"
+          >
             {badge}
           </motion.span>
         )}
@@ -403,7 +221,8 @@ export default function ParallaxHero({ badge, title, subtitle, children }) {
             duration: 0.8,
             ease: EASE_OUT,
           }}
-          className="font-switzer font-semibold text-white text-3xl sm:text-5xl leading-[1.05]">
+          className="font-switzer font-semibold text-white text-3xl sm:text-5xl leading-[1.05]"
+        >
           {title}
         </motion.h2>
 
@@ -415,7 +234,8 @@ export default function ParallaxHero({ badge, title, subtitle, children }) {
             duration: 0.7,
             ease: EASE_OUT,
           }}
-          className="max-w-md font-satoshi text-white/90 text-base sm:text-lg">
+          className="max-w-md font-satoshi text-white/90 text-base sm:text-lg"
+        >
           {subtitle}
         </motion.p>
 
@@ -427,7 +247,8 @@ export default function ParallaxHero({ badge, title, subtitle, children }) {
             duration: 0.6,
             ease: EASE_OUT,
           }}
-          className="flex flex-wrap gap-3 pt-2">
+          className="flex flex-wrap gap-3 pt-2"
+        >
           {children}
         </motion.div>
       </motion.div>
