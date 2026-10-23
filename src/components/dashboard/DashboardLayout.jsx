@@ -6,12 +6,13 @@ import { supabase } from "../../lib/supabase";
 import { EASE_OUT } from "../../animations/variants";
 import Sidebar from "./Sidebar";
 
-// Kerangka semua halaman dashboard: sidebar (bisa diminimize) + isi halaman.
+// Kerangka semua halaman dashboard: sidebar (klik untuk buka/tutup) + isi halaman.
 // Belum login -> otomatis diarahkan ke /signin.
 export default function DashboardLayout() {
   const { user, name, loading } = useAuth();
   const { pathname } = useLocation();
-  const [collapsed, setCollapsed] = useState(() => window.innerWidth < 1024);
+  // Sidebar awalnya tertutup (minimize); terbuka hanya saat ikon diklik
+  const [collapsed, setCollapsed] = useState(true);
 
   if (!supabase) {
     return <p className="p-10 font-satoshi">Isi VITE_SUPABASE_URL & VITE_SUPABASE_ANON_KEY di .env dulu ya.</p>;
@@ -20,7 +21,7 @@ export default function DashboardLayout() {
   if (!user) return <Navigate to="/signin" replace />;
 
   return (
-    <div className="flex gap-4 sm:gap-8 bg-backgroundIvory p-3 min-h-dvh">
+    <div className="flex gap-4 sm:gap-8 bg-backgroundIvory pr-3 min-h-dvh">
       <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} name={name} />
       {/* key = pathname -> animasi masuk diputar ulang tiap pindah halaman */}
       <motion.main

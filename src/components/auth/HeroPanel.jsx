@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import BackgroundSlider from "./BackgroundSlider";
 import HeroCard from "./HeroCard";
-import HeroDots from "./HeroDots";
 import { BACKGROUNDS, SLIDE_DURATION_MS } from "../../constants/backgrounds";
 
 const LAST_BACKGROUND_KEY = "triptrip:last-background";
@@ -30,7 +29,6 @@ export default function HeroPanel({ lines }) {
     <section className="hidden lg:block relative lg:w-1/2">
       <BackgroundSlider index={index} />
       <HeroCard lines={lines} />
-      <HeroDots items={BACKGROUNDS} activeIndex={index} onSelect={setIndex} />
     </section>
   );
 }
