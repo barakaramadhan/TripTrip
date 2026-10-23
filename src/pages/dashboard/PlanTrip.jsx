@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useNavigate, useSearchParams } from "react-router";
@@ -90,8 +91,8 @@ export default function PlanTrip() {
   };
 
   return (
-    <div className="gap-8 grid lg:grid-cols-[minmax(0,26rem)_1fr]">
-      <motion.form variants={staggerContainer(0.06)} initial="hidden" animate="visible" onSubmit={generate} className="self-start space-y-4 bg-backgroundIvory/0">
+    <div className="gap-8 grid lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:h-[calc(100vh-8rem)] lg:overflow-hidden">
+      <motion.form variants={staggerContainer(0.06)} initial="hidden" animate="visible" onSubmit={generate} className="self-start space-y-4 bg-backgroundIvory/0 lg:overflow-y-auto lg:max-h-full lg:pr-2">
         <motion.h1 variants={fadeUp} className="font-switzer font-bold text-4xl">Plan a Trip</motion.h1>
         <motion.p variants={fadeUp} className="font-satoshi">Isi detail singkat, AI yang menyusun rutenya.</motion.p>
 
@@ -129,7 +130,7 @@ export default function PlanTrip() {
         </motion.button>
       </motion.form>
 
-      <section className="min-h-80">
+      <section className="min-h-80 lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-2 scrollbar-hide">
         <AnimatePresence mode="wait">
           {status === "loading" && (
             <motion.div key="load" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-4">
