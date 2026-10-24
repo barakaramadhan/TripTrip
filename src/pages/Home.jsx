@@ -6,7 +6,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import ImageHero from "../assets/images/MainPeak.webp";
-import Navbar from "../components/shared/Navbar";
+
 
 function Home() {
   const sectionRef = useRef(null);
